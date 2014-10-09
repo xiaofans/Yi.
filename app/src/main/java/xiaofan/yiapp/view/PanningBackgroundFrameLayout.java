@@ -97,6 +97,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         int measuredHeight = getMeasuredHeight();
         if(measuredWidth == 0 || measuredHeight == 0) return;
         Log_YA.w(TAG,"backgroundHeight:" + backgroundHeight +" ,backgroundWidth:" + backgroundWidth +" , measured height:" + getMeasuredHeight() +" , measured width:" + getMeasuredWidth());
+        backgroundScale = (double)measuredHeight / (double)backgroundHeight;
 
     }
 
@@ -110,6 +111,10 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log_YA.w(TAG,"-- onDraw --");
+        if(background == null) return;
+        background.setBounds(0,0,(int)(backgroundScale * backgroundWidth), (int)(backgroundScale * backgroundHeight));
+        background.draw(canvas);
+       // canvas.drawColor(backgroundColor);
     }
 
 

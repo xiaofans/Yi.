@@ -4,6 +4,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.widget.RelativeLayout;
 
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.base.BaseActivity;
@@ -19,9 +21,15 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_my);
 
+        setUpActionBar();
         setUpViews();
+    }
+
+    private void setUpActionBar() {
+
     }
 
     private void setUpViews() {
