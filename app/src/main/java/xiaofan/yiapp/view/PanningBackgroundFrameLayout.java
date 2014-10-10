@@ -70,10 +70,14 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
    private double minBackgroundOffset;
    private double minBackgroundScale;
    private double panPerSecond = 10.0F * getResources().getDisplayMetrics().density;
+   private long lastPan;
 
     private Runnable updateOffset = new Runnable() {
         @Override
         public void run() {
+            double d = panPerSecond *(System.currentTimeMillis() - lastPan) / 1000.0D;
+            lastPan = System.currentTimeMillis();
+            backgroundOffset = d;
             ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
             postDelayed(this,16L);
         }
@@ -105,6 +109,14 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         if(measuredWidth == 0 || measuredHeight == 0) return;
         Log_YA.w(TAG,"backgroundHeight:" + backgroundHeight +" ,backgroundWidth:" + backgroundWidth +" , measured height:" + getMeasuredHeight() +" , measured width:" + getMeasuredWidth());
         backgroundScale = (double)measuredHeight / (double)backgroundHeight;
+        backgroundWidth = (int)(backgroundWidth * backgroundScale);
+        backgroundHeight = (int)(backgroundHeight * backgroundScale);
+
+        backgroundOffset = ((getMeasuredHeight() - this.backgroundHeight) / 2);
+        backgroundScale = 1.0D;
+
+        minBackgroundScale = (getMeasuredWidth() / this.backgroundWidth);
+        minBackgroundOffset = (getMeasuredWidth() - this.backgroundWidth);
     }
 
     @Override
@@ -120,7 +132,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         if(background == null) return;
         canvas.drawColor(backgroundColor);
         Log_YA.w(TAG,"scale is:" + backgroundScale +" scale width is:" + backgroundScale * backgroundWidth + " scale height is" + backgroundScale * backgroundHeight);
-        background.setBounds(0,0,(int)(backgroundScale * backgroundWidth), (int)(backgroundScale * backgroundHeight));
+        background.setBounds(0,0,backgroundWidth, backgroundHeight);
         background.draw(canvas);
     }
 
@@ -129,7 +141,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         this.isPanningEnabled = isPanningEnabled;
         removeCallbacks(updateOffset);
         if(isPanningEnabled){
-
+            lastPan = System.currentTimeMillis();
             postDelayed(updateOffset,16L);
         }
     }

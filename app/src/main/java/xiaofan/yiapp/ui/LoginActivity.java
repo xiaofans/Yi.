@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 
 import xiaofan.yiapp.R;
@@ -27,10 +26,6 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_my);
-        //透明状态栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //透明导航栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setUpActionBar();
         setUpViews();
         Utils.addSystemUIPadding(this,panningBackgroundFrameLayout);
@@ -43,6 +38,7 @@ public class LoginActivity extends BaseActivity {
     private void setUpViews() {
         panningBackgroundFrameLayout = (PanningBackgroundFrameLayout) findViewById(R.id.panning_bg);
         panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
+       // panningBackgroundFrameLayout.setPanningEnabled(true);
 
         clickBtn = (Button) findViewById(R.id.click);
         clickBtn.setOnClickListener(new View.OnClickListener() {
