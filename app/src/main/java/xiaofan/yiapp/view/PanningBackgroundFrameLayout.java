@@ -8,7 +8,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import xiaofan.yiapp.Utils.Log_YA;
+import xiaofan.yiapp.utils.Log_YA;
 
 /**
  * Created by zhaoyu on 2014/10/9.

@@ -8,12 +8,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import xiaofan.yiapp.R;
-import xiaofan.yiapp.Utils.Utils;
+import xiaofan.yiapp.utils.Utils;
 import xiaofan.yiapp.base.BaseActivity;
 import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
 

@@ -1,4 +1,4 @@
-package xiaofan.yiapp.Utils;
+package xiaofan.yiapp.utils;
 
 import android.app.Activity;
 import android.util.Log;

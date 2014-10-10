@@ -1,4 +1,4 @@
-package xiaofan.yiapp.Utils;
+package xiaofan.yiapp.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
