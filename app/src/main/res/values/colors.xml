@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ab_item_pressed">#22000000</color>
+    <color name="com_facebook_blue">#ff3b5998</color>
+    <color name="com_facebook_loginview_text_color">#ffffffff</color>
+    <color name="com_facebook_picker_search_bar_background">#fff5f5f7</color>
+    <color name="com_facebook_picker_search_bar_text">#ffbcbdc2</color>
+    <color name="com_facebook_usersettingsfragment_connected_shadow_color">#ff000000</color>
+    <color name="com_facebook_usersettingsfragment_connected_text_color">#ffffffff</color>
+    <color name="com_facebook_usersettingsfragment_not_connected_text_color">#ffa6aed7</color>
+    <color name="common_action_bar_splitter">#ffd2d2d2</color>
+    <item type="color" name="common_signin_btn_dark_text_default">@android:color/white</item>
+    <color name="common_signin_btn_dark_text_disabled">#ffaaaaaa</color>
+    <item type="color" name="common_signin_btn_dark_text_focused">@android:color/white</item>
+    <item type="color" name="common_signin_btn_dark_text_pressed">@android:color/white</item>
+    <color name="common_signin_btn_default_background">#ffdd4b39</color>
+    <color name="common_signin_btn_light_text_default">#ff737373</color>
+    <color name="common_signin_btn_light_text_disabled">#ffaaaaaa</color>
+    <color name="common_signin_btn_light_text_focused">#ff737373</color>
+    <item type="color" name="common_signin_btn_light_text_pressed">@android:color/white</item>
+    <color name="drawer_item_selected">#55e67e22</color>
+    <color name="hipster_blue">#ff3498db</color>
+    <color name="hipster_denim">#ff34495e</color>
+    <color name="hipster_green">#ff27ae60</color>
+    <color name="hipster_orange">#ffe67e22</color>
+    <color name="hipster_purple">#ff9b59b6</color>
+    <color name="hipster_red">#ffe74c3c</color>
+    <color name="text_dark">#ff333333</color>
+    <color name="text_hint">#ffa5a5a5</color>
+    <color name="text_shadow">#ff333333</color>
+    <color name="window_background_dark">#ff333333</color>
+    <color name="window_background_light">#fff1f1f1</color>
+</resources>

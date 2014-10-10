@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -70,6 +71,14 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
    private double minBackgroundScale;
    private double panPerSecond = 10.0F * getResources().getDisplayMetrics().density;
 
+    private Runnable updateOffset = new Runnable() {
+        @Override
+        public void run() {
+            ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
+            postDelayed(this,16L);
+        }
+    };
+
     public PanningBackgroundFrameLayout(Context context) {
         this(context,null);
     }
@@ -78,8 +87,6 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         super(context, attrs);
         setWillNotDraw(false);
     }
-
-
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -94,11 +101,10 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         this.backgroundHeight = background.getBitmap().getHeight();
         this.backgroundWidth =  background.getBitmap().getWidth();
         int measuredWidth = getMeasuredWidth();
-        int measuredHeight = getMeasuredHeight();
+        int measuredHeight = 1920;
         if(measuredWidth == 0 || measuredHeight == 0) return;
         Log_YA.w(TAG,"backgroundHeight:" + backgroundHeight +" ,backgroundWidth:" + backgroundWidth +" , measured height:" + getMeasuredHeight() +" , measured width:" + getMeasuredWidth());
         backgroundScale = (double)measuredHeight / (double)backgroundHeight;
-
     }
 
     @Override
@@ -112,14 +118,20 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         super.onDraw(canvas);
         Log_YA.w(TAG,"-- onDraw --");
         if(background == null) return;
+        canvas.drawColor(backgroundColor);
+        Log_YA.w(TAG,"scale is:" + backgroundScale +" scale width is:" + backgroundScale * backgroundWidth + " scale height is" + backgroundScale * backgroundHeight);
         background.setBounds(0,0,(int)(backgroundScale * backgroundWidth), (int)(backgroundScale * backgroundHeight));
         background.draw(canvas);
-       // canvas.drawColor(backgroundColor);
     }
 
 
     public void setPanningEnabled(boolean isPanningEnabled) {
         this.isPanningEnabled = isPanningEnabled;
+        removeCallbacks(updateOffset);
+        if(isPanningEnabled){
+
+            postDelayed(updateOffset,16L);
+        }
     }
 
     public void setPanningBackground(Bitmap bitmap) {
@@ -127,9 +139,13 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
            this.background = null;
            return;
        }
-
         this.background = new BitmapDrawable(getResources(),bitmap);
         measureBackground();
         setPanningEnabled(isPanningEnabled);
+    }
+
+    public void pc() {
+        Log_YA.w(TAG,"perfrom to redraw...");
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 }
