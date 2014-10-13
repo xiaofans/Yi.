@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity {
     private void setUpViews() {
         panningBackgroundFrameLayout = (PanningBackgroundFrameLayout) findViewById(R.id.panning_bg);
         panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
-       // panningBackgroundFrameLayout.setPanningEnabled(true);
+        panningBackgroundFrameLayout.setPanningEnabled(true);
 
         clickBtn = (Button) findViewById(R.id.click);
         clickBtn.setOnClickListener(new View.OnClickListener() {

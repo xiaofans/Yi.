@@ -3,6 +3,7 @@ package xiaofan.yiapp.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -78,6 +79,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
             double d = panPerSecond *(System.currentTimeMillis() - lastPan) / 1000.0D;
             lastPan = System.currentTimeMillis();
             backgroundOffset = d;
+            //Log_YA.w(TAG,"panning distance is:" + d);
             ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
             postDelayed(this,16L);
         }
@@ -107,7 +109,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         int measuredWidth = getMeasuredWidth();
         int measuredHeight = 1920;
         if(measuredWidth == 0 || measuredHeight == 0) return;
-        Log_YA.w(TAG,"backgroundHeight:" + backgroundHeight +" ,backgroundWidth:" + backgroundWidth +" , measured height:" + getMeasuredHeight() +" , measured width:" + getMeasuredWidth());
+        Log_YA.w(TAG,"backgroundHeight:" + backgroundHeight +" ,:" + backgroundWidth +" , measured height:" + getMeasuredHeight() +" , measured width:" + getMeasuredWidth());
         backgroundScale = (double)measuredHeight / (double)backgroundHeight;
         backgroundWidth = (int)(backgroundWidth * backgroundScale);
         backgroundHeight = (int)(backgroundHeight * backgroundScale);
@@ -126,14 +128,29 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
     }
 
     @Override
+    public void requestLayout() {
+        super.requestLayout();
+        Log_YA.w(TAG,"-- requestLayout --");
+    }
+    int i = 0;
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log_YA.w(TAG,"-- onDraw --");
         if(background == null) return;
-        canvas.drawColor(backgroundColor);
+        canvas.drawColor(Color.argb(255,253,66,77));
         Log_YA.w(TAG,"scale is:" + backgroundScale +" scale width is:" + backgroundScale * backgroundWidth + " scale height is" + backgroundScale * backgroundHeight);
-        background.setBounds(0,0,backgroundWidth, backgroundHeight);
+        int speed = 2;
+        int left = backgroundWidth - getMeasuredWidth();
+        int top = 0;
+        int right = backgroundWidth;
+        int bottom = backgroundHeight;
+        //background.setBounds(-i * 2,0,backgroundWidth - i * 2, backgroundHeight);
+        //background.setBounds(i * 2 ,0,(int)(getMeasuredWidth() * backgroundScale)  + i * 2,backgroundHeight);
+      //  background.setBounds((int)(getMeasuredWidth() * backgroundScale) - backgroundWidth + i * 2,0,i * 2 - backgroundWidth,backgroundHeight);
         background.draw(canvas);
+        i ++;
     }
 
 
