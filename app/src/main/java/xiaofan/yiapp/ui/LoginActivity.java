@@ -1,11 +1,14 @@
 package xiaofan.yiapp.ui;
 
+import android.annotation.TargetApi;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 
@@ -25,19 +28,28 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_my);
         setUpActionBar();
         setUpViews();
-        Utils.addSystemUIPadding(this,panningBackgroundFrameLayout);
     }
 
     private void setUpActionBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+        }
+    }
 
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        //透明状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //透明导航栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     private void setUpViews() {
         panningBackgroundFrameLayout = (PanningBackgroundFrameLayout) findViewById(R.id.panning_bg);
+        Utils.addSystemUIPadding(this,panningBackgroundFrameLayout);
         panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
         panningBackgroundFrameLayout.setPanningEnabled(true);
 

@@ -14,8 +14,6 @@ public class Utils {
 
     public static void addSystemUIPadding(Activity activity, View contentView)
     {
-        SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-        tintManager.setStatusBarTintEnabled(true);
         SystemBarTintManager.SystemBarConfig systemBarConfig = new SystemBarTintManager(activity).getConfig();
         int left = contentView.getPaddingLeft();
         int top = contentView.getPaddingTop() + systemBarConfig.getPixelInsetTop(false);

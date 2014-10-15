@@ -132,25 +132,29 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         super.requestLayout();
     }
     int i = 0;
+    int j = 0;
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Log_YA.w(TAG,"-- onDraw --");
         if(background == null) return;
-        canvas.drawColor(Color.argb(255,253,66,77));
         Log_YA.w(TAG,"scale is:" + backgroundScale +" scale width is:" + backgroundScale * backgroundWidth + " scale height is" + backgroundScale * backgroundHeight);
-        int speed = 2;
-        int left = backgroundWidth - getMeasuredWidth();
-        int top = 0;
-        int right = backgroundWidth;
-        int bottom = backgroundHeight;
-       // background.setBounds(-i * 2,0,backgroundWidth - i * 2, backgroundHeight);
-          background.setBounds(getMeasuredWidth() - backgroundWidth + i*2,0,getMeasuredWidth() + i * 2,backgroundHeight);
-        //background.setBounds(i * 2 ,0,(int)(getMeasuredWidth() * backgroundScale)  + i * 2,backgroundHeight);
-      //  background.setBounds((int)(getMeasuredWidth() * backgroundScale) - backgroundWidth + i * 2,0,i * 2 - backgroundWidth,backgroundHeight);
+         int offset = backgroundWidth - getMeasuredWidth();
+        if(i * 2 <= offset){
+             background.setBounds(-i * 2,0,backgroundWidth - i * 2, backgroundHeight);
+             i ++;
+             j = 0;
+        }else{
+            background.setBounds(getMeasuredWidth() - backgroundWidth + j * 2,0,getMeasuredWidth() + j * 2,backgroundHeight);
+            j ++;
+            if(getMeasuredWidth() - backgroundWidth + j * 2 >=0){
+                i = 0;
+            }
+        }
         background.draw(canvas);
-        i ++;
+        canvas.drawColor(Color.argb(100,43,43,43));
+
     }
 
 
