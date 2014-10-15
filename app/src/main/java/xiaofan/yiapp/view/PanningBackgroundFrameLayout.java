@@ -130,7 +130,6 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
     @Override
     public void requestLayout() {
         super.requestLayout();
-        Log_YA.w(TAG,"-- requestLayout --");
     }
     int i = 0;
 
@@ -146,7 +145,8 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         int top = 0;
         int right = backgroundWidth;
         int bottom = backgroundHeight;
-        //background.setBounds(-i * 2,0,backgroundWidth - i * 2, backgroundHeight);
+       // background.setBounds(-i * 2,0,backgroundWidth - i * 2, backgroundHeight);
+          background.setBounds(getMeasuredWidth() - backgroundWidth + i*2,0,getMeasuredWidth() + i * 2,backgroundHeight);
         //background.setBounds(i * 2 ,0,(int)(getMeasuredWidth() * backgroundScale)  + i * 2,backgroundHeight);
       //  background.setBounds((int)(getMeasuredWidth() * backgroundScale) - backgroundWidth + i * 2,0,i * 2 - backgroundWidth,backgroundHeight);
         background.draw(canvas);
