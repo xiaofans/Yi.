@@ -7,8 +7,15 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringConfig;
+import com.facebook.rebound.SpringListener;
+import com.facebook.rebound.SpringSystem;
+
+import butterknife.OnClick;
 import xiaofan.yiapp.utils.Log_YA;
 
 /**
@@ -56,7 +63,7 @@ import xiaofan.yiapp.utils.Log_YA;
  so good.
  */
 
-public class PanningBackgroundFrameLayout extends FrameLayout{
+public class PanningBackgroundFrameLayout extends FrameLayout implements View.OnClickListener{
 
    private static final String TAG = PanningBackgroundFrameLayout.class.getSimpleName();
    private boolean isPanningEnabled;
@@ -72,6 +79,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
    private double minBackgroundScale;
    private double panPerSecond = 10.0F * getResources().getDisplayMetrics().density;
    private long lastPan;
+   private boolean isZoomedOut;
 
     private Runnable updateOffset = new Runnable() {
         @Override
@@ -85,12 +93,43 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
         }
     };
 
+    private SpringSystem springSystem = SpringSystem.create();
+    private Spring scaleSpring = springSystem.createSpring();
+    private SpringListener springListener = new SpringListener() {
+        @Override
+        public void onSpringUpdate(Spring spring) {
+            Log_YA.w(TAG,"Spring current value is:" + spring.getCurrentValue());
+        }
+
+        @Override
+        public void onSpringAtRest(Spring spring) {
+            if(isZoomedOut){
+                setPanningEnabled(false);
+            }
+        }
+
+        @Override
+        public void onSpringActivate(Spring spring) {
+            setPanningEnabled(false);
+        }
+
+        @Override
+        public void onSpringEndStateChange(Spring spring) {
+
+        }
+    };
+
+    
+
     public PanningBackgroundFrameLayout(Context context) {
         this(context,null);
     }
 
     public PanningBackgroundFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        scaleSpring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(60.0D, 9.0D));
+        scaleSpring.setCurrentValue(1.0D);
+        scaleSpring.addListener(springListener);
         setWillNotDraw(false);
     }
 
@@ -180,5 +219,20 @@ public class PanningBackgroundFrameLayout extends FrameLayout{
     public void pc() {
         Log_YA.w(TAG,"perfrom to redraw...");
         ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+
+    public void toggleZoomedOut(){
+        scaleSpring.setVelocity(-10.0D);
+        scaleSpring.setEndValue(this.minBackgroundScale);
+    }
+
+    public void setClickToZoomEnabled(boolean enabled){
+        setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        toggleZoomedOut();
     }
 }

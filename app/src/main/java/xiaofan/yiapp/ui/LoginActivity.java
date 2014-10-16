@@ -52,6 +52,7 @@ public class LoginActivity extends BaseActivity {
         Utils.addSystemUIPadding(this,panningBackgroundFrameLayout);
         panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
         panningBackgroundFrameLayout.setPanningEnabled(true);
+        panningBackgroundFrameLayout.setClickToZoomEnabled(true);
 
         clickBtn = (Button) findViewById(R.id.click);
         clickBtn.setOnClickListener(new View.OnClickListener() {
