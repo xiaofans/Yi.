@@ -20,11 +20,9 @@ import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
 /**
  * login
  */
-public class LoginActivity extends BaseActivity implements View.OnClickListener{
+public class LoginActivity extends BaseActivity{
 
     private PanningBackgroundFrameLayout panningBackgroundFrameLayout;
-    private Button startPanBtn;
-    private Button stopPanBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +52,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         panningBackgroundFrameLayout.setPanningEnabled(true);
         panningBackgroundFrameLayout.setClickToZoomEnabled(true);
         panningBackgroundFrameLayout.setShouldAnimateBackgroundChange(false);
-        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
-
-
-        startPanBtn = (Button) findViewById(R.id.start_pan);
-        startPanBtn.setOnClickListener(this);
-
-        stopPanBtn = (Button) findViewById(R.id.stop_pan);
-        stopPanBtn.setOnClickListener(this);
-
+        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.psu));
     }
 
 
@@ -85,15 +75,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.start_pan:
-                panningBackgroundFrameLayout.setPanningEnabled(true);
-                break;
-            case R.id.stop_pan:
-                panningBackgroundFrameLayout.setPanningEnabled(false);
-                break;
-        }
-    }
+
 }
