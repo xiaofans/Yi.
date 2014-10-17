@@ -1,10 +1,14 @@
 package xiaofan.yiapp.view;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,6 +18,8 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
 import com.facebook.rebound.SpringListener;
 import com.facebook.rebound.SpringSystem;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import butterknife.OnClick;
 import xiaofan.yiapp.utils.Log_YA;
@@ -61,9 +67,10 @@ import xiaofan.yiapp.utils.Log_YA;
  !implements Target.
  不用ImageView 因为还要加其他元素
  so good.
+ I'm so happy it's alerday done! on date 2014.10.18
  */
 
-public class PanningBackgroundFrameLayout extends FrameLayout implements View.OnClickListener{
+public class PanningBackgroundFrameLayout extends FrameLayout implements View.OnClickListener,Target{
 
    private static final String TAG = PanningBackgroundFrameLayout.class.getSimpleName();
    private boolean isPanningEnabled;
@@ -87,11 +94,17 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
         @Override
         public void run() {
             if(isPanningEnabled && canPan){
+                if(backgroundOffset < 0.0D){
+                    if(backgroundOffset < minBackgroundOffset){
+                        panPerSecond = -panPerSecond;
+                        backgroundOffset = minBackgroundOffset;
+                    }
+                }else{
+                    panPerSecond = -panPerSecond;
+                    backgroundOffset = 0.0D;
+                }
                 double d = panPerSecond *(System.currentTimeMillis() - lastPan) / 1000.0D;
                 backgroundOffset += d;
-                if(backgroundOffset >= 0.0D){
-                    setPanningEnabled(false);
-                }
                 lastPan = System.currentTimeMillis();
                 ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
                 postDelayed(this,16L);
@@ -113,6 +126,8 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
         public void onSpringAtRest(Spring spring) {
             if(!isZoomedOut){
                 setPanningEnabled(false);
+            }else {
+                setPanningEnabled(true);
             }
         }
 
@@ -184,26 +199,31 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(background != null){
-            if(minBackgroundScale != 1.0D){
-                float f = 1.0f;
-                int left,top,right,bottom;
-                f = (float)((backgroundScale - minBackgroundScale) / (1.0D - minBackgroundScale));
-                if(backgroundWidth > getWidth()){
-                    left = (int)(f * backgroundOffset);
-                    top = (int)(getHeight() - getHeight() * backgroundScale) / 2;
-                    right = left + (int)(backgroundWidth * backgroundScale);
-                    bottom = (int)(top + getHeight() * backgroundScale);
-                }else{
-                    left = (int)(getWidth() - getWidth() * backgroundScale)/2;
-                    top =  (int)(f * backgroundOffset);
-                    right = (int)(left + getWidth() * backgroundScale);
-                    bottom = (int)(top + backgroundHeight * backgroundScale);
-                }
-                background.setBounds(left,top,right,bottom);
+            if(backgroundScale != 1.0D || isAnimatingBackground){
+                canvas.drawColor(backgroundColor);
             }
+            float f = 1.0f;
+            int left,top,right,bottom;
+            f = (float)((backgroundScale - minBackgroundScale) / (1.0D - minBackgroundScale));
+            if(backgroundWidth > getWidth()){
+                left = (int)(f * backgroundOffset);
+                top = (int)(getHeight() - getHeight() * backgroundScale) / 2;
+                right = left + (int)(backgroundWidth * backgroundScale);
+                bottom = (int)(top + getHeight() * backgroundScale);
+            }else{
+                left = (int)(getWidth() - getWidth() * backgroundScale)/2;
+                top =  (int)(f * backgroundOffset);
+                right = (int)(left + getWidth() * backgroundScale);
+                bottom = (int)(top + backgroundHeight * backgroundScale);
+            }
+            background.setBounds(left,top,right,bottom);
+            background.draw(canvas);
+            if (Math.max(f, 0.0F) != 0.0F) {
+                canvas.drawColor(Color.argb((int)(85.0F * Math.max(f, 0.0F)), 0, 0, 0));
+            }
+        }else{
+            canvas.drawColor(backgroundColor);
         }
-        background.draw(canvas);
-        canvas.drawColor(Color.argb(100,43,43,43));
     }
 
 
@@ -219,13 +239,46 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     public void setPanningBackground(Bitmap bitmap) {
        if(bitmap == null){
            this.background = null;
+           ViewCompat.postInvalidateOnAnimation(this);
            return;
        }
         this.background = new BitmapDrawable(getResources(),bitmap);
-        this.isAnimatingBackground = true;
         measureBackground();
-        setPanningEnabled(isPanningEnabled);
+        ViewCompat.postInvalidateOnAnimation(this);
+        if(shouldAnimateBackgroundChange){
+            ObjectAnimator objectAnimator = ObjectAnimator.ofInt(background,"alpha",new int[]{0,255});
+            objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
+                }
+            });
+            objectAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
 
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    isAnimatingBackground = false;
+                    ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+            isAnimatingBackground = true;
+            objectAnimator.start();
+        }
+        
     }
 
 
@@ -264,5 +317,21 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     public boolean shouldAnimateBackgroundChange()
     {
         return this.shouldAnimateBackgroundChange;
+    }
+
+    @Override
+    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+        setPanningBackground(bitmap);
+    }
+
+    @Override
+    public void onBitmapFailed(Drawable drawable) {
+        this.background = null;
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
+
+    @Override
+    public void onPrepareLoad(Drawable drawable) {
+
     }
 }

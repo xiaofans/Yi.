@@ -51,9 +51,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private void setUpViews() {
         panningBackgroundFrameLayout = (PanningBackgroundFrameLayout) findViewById(R.id.panning_bg);
         Utils.addSystemUIPadding(this,panningBackgroundFrameLayout);
-        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
         panningBackgroundFrameLayout.setPanningEnabled(true);
         panningBackgroundFrameLayout.setClickToZoomEnabled(true);
+        panningBackgroundFrameLayout.setShouldAnimateBackgroundChange(false);
+        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
+
 
         startPanBtn = (Button) findViewById(R.id.start_pan);
         startPanBtn.setOnClickListener(this);
