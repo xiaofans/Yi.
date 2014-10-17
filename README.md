@@ -1,3 +1,3 @@
 Yi.
 ===
-personal use.
+personal use.learning project.
