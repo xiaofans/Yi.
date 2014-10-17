@@ -20,10 +20,11 @@ import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
 /**
  * login
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     private PanningBackgroundFrameLayout panningBackgroundFrameLayout;
-    private Button clickBtn;
+    private Button startPanBtn;
+    private Button stopPanBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +55,12 @@ public class LoginActivity extends BaseActivity {
         panningBackgroundFrameLayout.setPanningEnabled(true);
         panningBackgroundFrameLayout.setClickToZoomEnabled(true);
 
-        clickBtn = (Button) findViewById(R.id.click);
-        clickBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                panningBackgroundFrameLayout.pc();
-            }
-        });
+        startPanBtn = (Button) findViewById(R.id.start_pan);
+        startPanBtn.setOnClickListener(this);
+
+        stopPanBtn = (Button) findViewById(R.id.stop_pan);
+        stopPanBtn.setOnClickListener(this);
+
     }
 
 
@@ -81,5 +81,17 @@ public class LoginActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.start_pan:
+                panningBackgroundFrameLayout.setPanningEnabled(true);
+                break;
+            case R.id.stop_pan:
+                panningBackgroundFrameLayout.setPanningEnabled(false);
+                break;
+        }
     }
 }

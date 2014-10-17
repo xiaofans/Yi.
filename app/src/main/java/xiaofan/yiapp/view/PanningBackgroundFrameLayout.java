@@ -77,19 +77,26 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
    private double backgroundScale;
    private double minBackgroundOffset;
    private double minBackgroundScale;
-   private double panPerSecond = 10.0F * getResources().getDisplayMetrics().density;
+   private double panPerSecond = 10F * getResources().getDisplayMetrics().density;
    private long lastPan;
-   private boolean isZoomedOut;
+   private boolean isZoomedOut = true;
+   private boolean shouldAnimateBackgroundChange = true;
+    private boolean isClickToZoomEnabled;
 
     private Runnable updateOffset = new Runnable() {
         @Override
         public void run() {
-            double d = panPerSecond *(System.currentTimeMillis() - lastPan) / 1000.0D;
-            lastPan = System.currentTimeMillis();
-            backgroundOffset = d;
-            //Log_YA.w(TAG,"panning distance is:" + d);
-            ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
-            postDelayed(this,16L);
+            if(isPanningEnabled && canPan){
+                double d = panPerSecond *(System.currentTimeMillis() - lastPan) / 1000.0D;
+                backgroundOffset += d;
+                if(backgroundOffset >= 0.0D){
+                    setPanningEnabled(false);
+                }
+                lastPan = System.currentTimeMillis();
+                ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
+                postDelayed(this,16L);
+            }
+
         }
     };
 
@@ -98,19 +105,20 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     private SpringListener springListener = new SpringListener() {
         @Override
         public void onSpringUpdate(Spring spring) {
-            Log_YA.w(TAG,"Spring current value is:" + spring.getCurrentValue());
+            backgroundScale = spring.getCurrentValue();
+            ViewCompat.postInvalidateOnAnimation(PanningBackgroundFrameLayout.this);
         }
 
         @Override
         public void onSpringAtRest(Spring spring) {
-            if(isZoomedOut){
+            if(!isZoomedOut){
                 setPanningEnabled(false);
             }
         }
 
         @Override
         public void onSpringActivate(Spring spring) {
-            setPanningEnabled(false);
+
         }
 
         @Override
@@ -118,8 +126,6 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
 
         }
     };
-
-    
 
     public PanningBackgroundFrameLayout(Context context) {
         this(context,null);
@@ -136,64 +142,68 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        Log_YA.w(TAG,"-- onMeasure --");
         measureBackground();
         setPanningEnabled(isPanningEnabled);
     }
 
     private void measureBackground() {
         if(background == null) return;
+        // step 1. calculate background width and height
         this.backgroundHeight = background.getBitmap().getHeight();
         this.backgroundWidth =  background.getBitmap().getWidth();
-        int measuredWidth = getMeasuredWidth();
-        int measuredHeight = 1920;
-        if(measuredWidth == 0 || measuredHeight == 0) return;
-        Log_YA.w(TAG,"backgroundHeight:" + backgroundHeight +" ,:" + backgroundWidth +" , measured height:" + getMeasuredHeight() +" , measured width:" + getMeasuredWidth());
-        backgroundScale = (double)measuredHeight / (double)backgroundHeight;
-        backgroundWidth = (int)(backgroundWidth * backgroundScale);
-        backgroundHeight = (int)(backgroundHeight * backgroundScale);
-
-        backgroundOffset = ((getMeasuredHeight() - this.backgroundHeight) / 2);
-        backgroundScale = 1.0D;
-
-        minBackgroundScale = (getMeasuredWidth() / this.backgroundWidth);
-        minBackgroundOffset = (getMeasuredWidth() - this.backgroundWidth);
+        float f = (float)getMeasuredHeight() / (float)backgroundHeight;
+        if(f * backgroundWidth < getMeasuredWidth()){
+            f = getMeasuredWidth() / backgroundWidth;
+        }
+        backgroundWidth = (int)(f * backgroundWidth);
+        backgroundHeight = (int)(f * backgroundHeight);
+        // step 2. calculate background scale offset can pan.
+        if(backgroundWidth > getWidth()){
+            minBackgroundScale = (double)getMeasuredWidth() / (double)backgroundWidth;
+            minBackgroundOffset = getMeasuredWidth() - backgroundWidth;
+            if(minBackgroundScale >= 0.9d){
+                canPan = false;
+                minBackgroundScale = (double)getMeasuredHeight() / (double)backgroundHeight;
+                minBackgroundOffset = getMeasuredHeight() - backgroundHeight;
+                backgroundScale = 1.0D;
+                backgroundOffset = (double)(getMeasuredHeight() - backgroundHeight) / 2;
+            } else {
+                canPan = true;
+                backgroundScale = 1.0D;
+                backgroundOffset = (double)(getMeasuredWidth() - backgroundWidth) / 2;
+            }
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        Log_YA.w(TAG,"-- onLayout --");
     }
-
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-    }
-    int i = 0;
-    int j = 0;
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log_YA.w(TAG,"-- onDraw --");
-        if(background == null) return;
-        Log_YA.w(TAG,"scale is:" + backgroundScale +" scale width is:" + backgroundScale * backgroundWidth + " scale height is" + backgroundScale * backgroundHeight);
-         int offset = backgroundWidth - getMeasuredWidth();
-        if(i * 2 <= offset){
-             background.setBounds(-i * 2,0,backgroundWidth - i * 2, backgroundHeight);
-             i ++;
-             j = 0;
-        }else{
-            background.setBounds(getMeasuredWidth() - backgroundWidth + j * 2,0,getMeasuredWidth() + j * 2,backgroundHeight);
-            j ++;
-            if(getMeasuredWidth() - backgroundWidth + j * 2 >=0){
-                i = 0;
+        if(background != null){
+            if(minBackgroundScale != 1.0D){
+                float f = 1.0f;
+                int left,top,right,bottom;
+                f = (float)((backgroundScale - minBackgroundScale) / (1.0D - minBackgroundScale));
+                if(backgroundWidth > getWidth()){
+                    left = (int)(f * backgroundOffset);
+                    top = (int)(getHeight() - getHeight() * backgroundScale) / 2;
+                    right = left + (int)(backgroundWidth * backgroundScale);
+                    bottom = (int)(top + getHeight() * backgroundScale);
+                }else{
+                    left = (int)(getWidth() - getWidth() * backgroundScale)/2;
+                    top =  (int)(f * backgroundOffset);
+                    right = (int)(left + getWidth() * backgroundScale);
+                    bottom = (int)(top + backgroundHeight * backgroundScale);
+                }
+                background.setBounds(left,top,right,bottom);
             }
         }
         background.draw(canvas);
         canvas.drawColor(Color.argb(100,43,43,43));
-
     }
 
 
@@ -212,27 +222,47 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
            return;
        }
         this.background = new BitmapDrawable(getResources(),bitmap);
+        this.isAnimatingBackground = true;
         measureBackground();
         setPanningEnabled(isPanningEnabled);
+
     }
 
-    public void pc() {
-        Log_YA.w(TAG,"perfrom to redraw...");
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
 
 
     public void toggleZoomedOut(){
-        scaleSpring.setVelocity(-10.0D);
-        scaleSpring.setEndValue(this.minBackgroundScale);
+        if(!canPan) return;
+        if(isZoomedOut){
+            scaleSpring.setVelocity(-10.0D);
+            scaleSpring.setEndValue(this.minBackgroundScale);
+            isZoomedOut = false;
+        }else{
+            this.scaleSpring.setVelocity(10.0D);
+            this.scaleSpring.setEndValue(1.0D);
+            isZoomedOut = true;
+        }
+
     }
 
     public void setClickToZoomEnabled(boolean enabled){
-        setOnClickListener(this);
+         isClickToZoomEnabled= enabled;
+        if(isClickToZoomEnabled){
+            setOnClickListener(this);
+        }
     }
 
     @Override
     public void onClick(View view) {
         toggleZoomedOut();
+    }
+
+    public void setShouldAnimateBackgroundChange(boolean shouldAnimateBackgroundChange)
+    {
+        this.shouldAnimateBackgroundChange = shouldAnimateBackgroundChange;
+    }
+
+    public boolean shouldAnimateBackgroundChange()
+    {
+        return this.shouldAnimateBackgroundChange;
     }
 }
