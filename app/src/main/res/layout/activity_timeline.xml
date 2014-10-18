@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <fr.castorflex.android.verticalviewpager.VerticalViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+        <ImageButton
+            android:layout_gravity="top|left|center"
+            android:id="@+id/drawer_indicator"
+            android:background="@drawable/ic_navigation_drawer"
+            android:layout_width="48.0dip"
+            android:layout_height="48.0dip"
+            android:layout_marginTop="46.0dip" />
+    </FrameLayout>
+    <fragment
+        android:name="xiaofan.yiapp.fragment.DrawerFragment"
+        android:layout_gravity="left"
+        android:id="@+id/drawer"
+        android:layout_width="280.0dip"
+        android:layout_height="fill_parent"
+    />
+</android.support.v4.widget.DrawerLayout>

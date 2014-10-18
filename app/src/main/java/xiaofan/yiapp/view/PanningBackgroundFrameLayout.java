@@ -321,6 +321,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
 
     public void setBackgroundColor(int color){
         this.backgroundColor = color;
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
     @Override
