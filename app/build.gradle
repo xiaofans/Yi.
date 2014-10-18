@@ -30,4 +30,6 @@ dependencies {
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'com.jakewharton:butterknife:5.1.2'
+    compile 'de.greenrobot:eventbus:2.2.1'
+    compile 'uk.co.chrisjenx:calligraphy:1.1.+'
 }
