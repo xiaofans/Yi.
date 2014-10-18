@@ -319,6 +319,10 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
         return this.shouldAnimateBackgroundChange;
     }
 
+    public void setBackgroundColor(int color){
+        this.backgroundColor = color;
+    }
+
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
         setPanningBackground(bitmap);

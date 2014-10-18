@@ -1,15 +1,14 @@
 package xiaofan.yiapp.ui;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 
 
 import xiaofan.yiapp.R;
@@ -52,7 +51,7 @@ public class LoginActivity extends BaseActivity{
         panningBackgroundFrameLayout.setPanningEnabled(true);
         panningBackgroundFrameLayout.setClickToZoomEnabled(true);
         panningBackgroundFrameLayout.setShouldAnimateBackgroundChange(false);
-        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.psu));
+        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
     }
 
 
@@ -76,4 +75,7 @@ public class LoginActivity extends BaseActivity{
     }
 
 
+    public static Intent newIntent(Context context) {
+        return new Intent(context,LoginActivity.class);
+    }
 }
