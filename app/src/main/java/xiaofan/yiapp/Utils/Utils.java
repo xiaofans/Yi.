@@ -19,7 +19,6 @@ public class Utils {
         int top = contentView.getPaddingTop() + systemBarConfig.getPixelInsetTop(false);
         int right = contentView.getPaddingRight() + systemBarConfig.getPixelInsetRight();
         int bottom = contentView.getPaddingBottom() + systemBarConfig.getPixelInsetBottom();
-        Log.w(TAG,"padding > left:" + left +" top:" + top +" right:" + right +" bottom:" + bottom);
         contentView.setPadding(left,top,right,bottom);
     }
 
