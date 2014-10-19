@@ -7,10 +7,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import xiaofan.yiapp.R;
+import xiaofan.yiapp.adapter.PostsFragmentAdapter;
+import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.base.AuthenticatedActivity;
 import xiaofan.yiapp.utils.Utils;
 
@@ -26,6 +31,8 @@ public class TimelineActivity extends AuthenticatedActivity{
 
     @InjectView(R.id.view_pager)
     VerticalViewPager pager;
+    private PostsFragmentAdapter pagerAdapter;
+
 
     private DrawerLayout.DrawerListener drawerCallbacks = new DrawerLayout.DrawerListener(){
 
@@ -60,6 +67,22 @@ public class TimelineActivity extends AuthenticatedActivity{
         drawer.setDrawerListener(drawerCallbacks);
         Utils.addSystemUIPadding(this, this.drawerIndicator); // why
         pager.setPageMargin((int)(2.0F * getResources().getDisplayMetrics().density));
+        this.pagerAdapter = new PostsFragmentAdapter(getSupportFragmentManager());
+        this.pager.setAdapter(this.pagerAdapter);
+        testUI();
+    }
+
+    private void testUI() {
+        List<Post> list = new ArrayList<Post>();
+        Post post1 = new Post();
+        post1.type = Post.TYPE_IMAGE;
+        list.add(post1);
+
+        Post post2 = new Post();
+        post2.type = Post.TYPE_TEXT;
+        list.add(post2);
+
+        pagerAdapter.setPosts(list);
     }
 
     public static Intent newIntent(Context context)

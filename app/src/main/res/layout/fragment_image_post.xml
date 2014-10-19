@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xiaofan.yiapp.view.PanningBackgroundFrameLayout
+    android:orientation="vertical"
+    android:id="@+id/post"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="24.0dip">
+        <LinearLayout
+            android:layout_gravity="top|left|center"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="30.0sp"
+                android:textColor="@android:color/white"
+                android:id="@+id/day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="0.0"
+                android:shadowDy="2.0"
+                android:shadowRadius="2.0"
+                />
+            <TextView
+                android:textSize="14.0sp"
+                android:textColor="@android:color/white"
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4.0dip"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="0.0"
+                android:shadowDy="2.0"
+                android:shadowRadius="2.0"
+                />
+        </LinearLayout>
+        <xiaofan.yiapp.view.AvatarCircleView
+            android:layout_gravity="top|right|center"
+            android:id="@+id/avatar"
+            android:layout_width="44.0dip"
+            android:layout_height="44.0dip" />
+        <TextView
+            android:textSize="24.0sp"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24.0dip"
+            android:shadowColor="@color/text_shadow"
+            android:shadowDx="0.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="2.0"
+            android:lineSpacingExtra="5.0sp"
+            />
+    </FrameLayout>
+    <include layout="@layout/view_post_options" />
+</xiaofan.yiapp.view.PanningBackgroundFrameLayout>

@@ -339,4 +339,8 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     public void onPrepareLoad(Drawable drawable) {
 
     }
+
+    public boolean isZoomedOut() {
+        return isZoomedOut;
+    }
 }

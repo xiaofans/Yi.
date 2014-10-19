@@ -2,6 +2,7 @@ package xiaofan.yiapp.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,5 +19,10 @@ public class UploadPostFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upload_post,container,false);
         return view;
+    }
+
+    public static Fragment newInstance() {
+       UploadPostFragment uploadPostFragment = new UploadPostFragment();
+        return uploadPostFragment;
     }
 }
