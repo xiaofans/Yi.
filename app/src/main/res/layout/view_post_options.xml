@@ -29,7 +29,9 @@
         <ImageView
             android:id="@+id/heart_post_image"
             android:layout_width="24.0dip"
-            android:layout_height="24.0dip" />
+            android:layout_height="24.0dip"
+            android:src="@drawable/ic_heart_filled"
+            />
     </LinearLayout>
     <LinearLayout
         android:gravity="center_vertical"

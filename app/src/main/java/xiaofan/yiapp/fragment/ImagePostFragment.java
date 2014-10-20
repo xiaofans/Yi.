@@ -1,5 +1,6 @@
 package xiaofan.yiapp.fragment;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -30,6 +31,8 @@ public class ImagePostFragment extends PostFragment{
         this.commentCounter.setText("2");
         this.heartCounter.setText("22");
         Utils.addSystemUIPadding(getActivity(), this.postView);
+        this.postView.setShouldAnimateBackgroundChange(true);
+        this.postView.setPanningBackground(BitmapFactory.decodeResource(getResources(), R.drawable.l));
         return view;
     }
 
