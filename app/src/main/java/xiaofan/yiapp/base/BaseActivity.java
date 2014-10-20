@@ -68,8 +68,8 @@ public abstract class BaseActivity extends FragmentActivity{
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         EventBus.unregister(this);
+        super.onDestroy();
     }
 
     @Override

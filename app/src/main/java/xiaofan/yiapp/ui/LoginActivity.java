@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import java.util.Iterator;
 
 import xiaofan.yiapp.R;
+import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.social.SocialApi;
 import xiaofan.yiapp.utils.Utils;
 import xiaofan.yiapp.base.BaseActivity;

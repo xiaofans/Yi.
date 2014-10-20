@@ -1,5 +1,7 @@
 package xiaofan.yiapp.fragment;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,9 +13,12 @@ import android.widget.ImageButton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import xiaofan.yiapp.R;
+import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.BaseFragment;
+import xiaofan.yiapp.utils.Utils;
 import xiaofan.yiapp.view.AvatarCircleView;
 import xiaofan.yiapp.view.ColorPickerPopupWindow;
 import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
@@ -36,6 +41,9 @@ public class UploadPostFragment extends BaseFragment{
     PanningBackgroundFrameLayout postBackground;
     @InjectView(R.id.text)
     EditText postText;
+    private int postColor;
+    private Bitmap postImage;
+    private Uri postImageUri;
 
     private String postType;
     private View root;
@@ -44,17 +52,34 @@ public class UploadPostFragment extends BaseFragment{
     private ColorPickerPopupWindow.OnColorPickedListener onColorPickedListener = new ColorPickerPopupWindow.OnColorPickedListener() {
         @Override
         public void colorPicked(int color) {
+            postType = Post.TYPE_TEXT;
+            postColor = color;
+            postImageUri = null;
+            postBackground.setPanningEnabled(false);
+            postBackground.setPanningBackground(null);
+            postBackground.setBackgroundColor(color);
+            if(postText.length() > 0){
+                upload.setVisibility(View.VISIBLE);
+            }
+
         }
     };
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        root = inflater.inflate(R.layout.fragment_upload_post,container,false);
         ButterKnife.inject(this, this.root);
+        Utils.addSystemUIPadding(getActivity(),root);
         return root;
     }
 
     public static Fragment newInstance() {
        UploadPostFragment uploadPostFragment = new UploadPostFragment();
         return uploadPostFragment;
+    }
+
+    @OnClick(R.id.color)
+    public void bgWithColor(View paramView)
+    {
+        new ColorPickerPopupWindow(getActivity(), this.onColorPickedListener).showAsDropDown(paramView);
     }
 }
