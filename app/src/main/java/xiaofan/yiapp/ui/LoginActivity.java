@@ -8,15 +8,19 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 import java.util.Iterator;
 
 import xiaofan.yiapp.R;
-import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.LogoutEvent;
+import xiaofan.yiapp.social.LoginCallback;
+import xiaofan.yiapp.social.LoginError;
 import xiaofan.yiapp.social.SocialApi;
+import xiaofan.yiapp.social.SocialAuth;
+import xiaofan.yiapp.social.WeiboApi;
 import xiaofan.yiapp.utils.Utils;
 import xiaofan.yiapp.base.BaseActivity;
 import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
@@ -36,7 +40,23 @@ public class LoginActivity extends BaseActivity{
 
         @Override
         public void onClick(View view) {
-            startActivity(TimelineActivity.newIntent(LoginActivity.this));
+            SocialApi.setCurrent(LoginActivity.this,(String)view.getTag());
+           if(WeiboApi.TAG.equals(view.getTag())){
+                SocialApi.getCurrent(LoginActivity.this).login(LoginActivity.this,new LoginCallback() {
+                    @Override
+                    public void failure(LoginError loginError) {
+                        Toast.makeText(LoginActivity.this,"WeiBo login failure!",Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void success(SocialAuth socialAuth) {
+                        Toast.makeText(LoginActivity.this,"WeiBo login success!",Toast.LENGTH_LONG).show();
+                    }
+                });
+           }else{
+               startActivity(TimelineActivity.newIntent(LoginActivity.this));
+           }
+
         }
     };
     @Override

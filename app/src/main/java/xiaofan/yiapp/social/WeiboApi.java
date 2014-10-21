@@ -3,7 +3,9 @@ package xiaofan.yiapp.social;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +34,19 @@ public class WeiboApi extends SocialApi{
     private WeiboAuth mWeiboAuth;
     private Oauth2AccessToken mAccessToken;
     private SsoHandler mSsoHandler;
+    private LoginCallback loginCallback;
+    private Activity activity;
+    private static final String PREF_OAUTH_TOKEN = "weibo_oauth_token";
+    private static final String PREF_OAUTH_NETWORK = "weibo_oauth_network";
+    private static final String PREF_OAUTH_ID = "weibo_oauth_network";
     @Override
     public void getSocialAuth(Context context, LoginCallback loginCallback) {
-        // 创建微博实例
-        mWeiboAuth = new WeiboAuth(context, KEY, "", SCOPE);
-        mSsoHandler = new SsoHandler((Activity)context, mWeiboAuth);
-        mSsoHandler.authorize(new AuthListener(loginCallback));
+        SocialAuth socialAuth = getSocialAuth(context);
+        if(socialAuth == null){
+            loginCallback.success(socialAuth);
+        }else {
+            loginCallback.failure(new LoginError("NULL",false));
+        }
     }
 
     @Override
@@ -47,6 +56,12 @@ public class WeiboApi extends SocialApi{
 
     @Override
     public void login(Activity activity, LoginCallback loginCallback) {
+        this.activity = activity;
+        this.loginCallback = loginCallback;
+        // 创建微博实例
+        mWeiboAuth = new WeiboAuth(activity, KEY, "https://api.weibo.com/oauth2/default.html", SCOPE);
+        mSsoHandler = new SsoHandler(activity, mWeiboAuth);
+        mSsoHandler.authorize(new AuthListener(loginCallback));
 
     }
 
@@ -57,7 +72,7 @@ public class WeiboApi extends SocialApi{
 
     @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
-
+        Toast.makeText(activity,"onActivityResult invoked",Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -83,7 +98,8 @@ public class WeiboApi extends SocialApi{
                 SocialAuth socialAuth = new SocialAuth();
                 socialAuth.id = mAccessToken.getUid();
                 socialAuth.token = mAccessToken.getToken();
-                socialAuth.network = "weibo";
+                socialAuth.network = TAG;
+                saveWeiBoToken(socialAuth);
                 if(loginCallback != null){
                     loginCallback.success(socialAuth);
                 }
@@ -109,6 +125,27 @@ public class WeiboApi extends SocialApi{
         }
     }
 
+    private void saveWeiBoToken(SocialAuth socialAuth) {
+        if(socialAuth == null) return;
+        SharedPreferences.Editor editor = activity.getSharedPreferences(TAG,0).edit();
+        editor.putString(PREF_OAUTH_TOKEN, socialAuth.getToken());
+        editor.putString(PREF_OAUTH_ID,socialAuth.getId());
+        editor.putString(PREF_OAUTH_NETWORK,TAG);
+        editor.commit();
+    }
+
+    private SocialAuth getSocialAuth(Context context){
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(TAG,0);
+        String id = sharedPreferences.getString(PREF_OAUTH_ID,null);
+        if(TextUtils.isEmpty(id)) return null;
+        String token = sharedPreferences.getString(PREF_OAUTH_TOKEN,null);
+        String network = sharedPreferences.getString(PREF_OAUTH_NETWORK,null);
+        SocialAuth socialAuth = new SocialAuth();
+        socialAuth.id = id;
+        socialAuth.network = network;
+        socialAuth.token = token;
+        return socialAuth;
+    }
 
 
 }
