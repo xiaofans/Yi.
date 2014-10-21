@@ -1,14 +1,10 @@
 package xiaofan.yiapp;
 
 import android.app.Application;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 
 import se.emilsjolander.sprinkles.Migration;
 import se.emilsjolander.sprinkles.Sprinkles;
-import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.social.SocialApi;
 
