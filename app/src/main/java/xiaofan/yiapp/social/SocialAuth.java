@@ -4,9 +4,9 @@ package xiaofan.yiapp.social;
  * Created by zhaoyu on 2014/10/18.
  */
 public class SocialAuth {
-    private String id;
-    private String network;
-    private String token;
+    public String id;
+    public String network;
+    public String token;
 
     public SocialAuth(){}
 

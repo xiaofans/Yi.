@@ -1,6 +1,8 @@
 package xiaofan.yiapp.ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,6 +14,8 @@ import java.util.Iterator;
 
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.events.EventBus;
+import xiaofan.yiapp.events.LogoutEvent;
 import xiaofan.yiapp.social.SocialApi;
 import xiaofan.yiapp.utils.Utils;
 import xiaofan.yiapp.base.BaseActivity;
@@ -26,6 +30,8 @@ import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
 public class LoginActivity extends BaseActivity{
     private PanningBackgroundFrameLayout panningBackgroundFrameLayout;
     private LinearLayout socialButtons;
+    private ProgressDialog pd;
+    private boolean loginInProgress;
     private View.OnClickListener OnSocialButtonClicked = new View.OnClickListener(){
 
         @Override
@@ -40,6 +46,15 @@ public class LoginActivity extends BaseActivity{
         setUpViews();
     }
     private void setUpViews() {
+        pd = new ProgressDialog(this);
+        pd.setMessage("登录中...");
+        pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                EventBus.post(new LogoutEvent());
+                loginInProgress = false;
+            }
+        });
         panningBackgroundFrameLayout = (PanningBackgroundFrameLayout) findViewById(R.id.panning_bg);
         Utils.addSystemUIPadding(this,panningBackgroundFrameLayout);
         panningBackgroundFrameLayout.setPanningEnabled(true);
@@ -63,5 +78,19 @@ public class LoginActivity extends BaseActivity{
         return new Intent(context,LoginActivity.class);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(loginInProgress){
+            pd.dismiss();
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(loginInProgress && SocialApi.getCurrent(this) != null){
+            SocialApi.getCurrent(this).onActivityResult(this,requestCode,resultCode,data);
+        }
+    }
 }

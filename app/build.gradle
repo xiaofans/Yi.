@@ -33,4 +33,5 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.2.1'
     compile 'uk.co.chrisjenx:calligraphy:1.1.+'
     compile files('libs/gson-2.2.4.jar')
+    compile files('libs/weibosdkcore.jar')
 }

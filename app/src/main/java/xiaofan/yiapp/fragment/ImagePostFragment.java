@@ -25,11 +25,6 @@ public class ImagePostFragment extends PostFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_post,container,false);
         ButterKnife.inject(this, view);
-        this.day.setText("IMAGE");
-        this.date.setText("IMAGE");
-        this.content.setText("IMAGE");
-        this.commentCounter.setText("2");
-        this.heartCounter.setText("22");
         Utils.addSystemUIPadding(getActivity(), this.postView);
         this.postView.setShouldAnimateBackgroundChange(true);
         this.postView.setPanningBackground(BitmapFactory.decodeResource(getResources(), R.drawable.l));

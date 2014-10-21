@@ -2,5 +2,5 @@
 <selector android:enterFadeDuration="100" android:exitFadeDuration="100"
   xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true" android:drawable="@color/drawer_item_selected" />
-    <item android:drawable="@*android:color/transparent" />
+    <item android:drawable="@android:color/transparent" />
 </selector>
