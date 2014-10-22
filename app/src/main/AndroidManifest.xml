@@ -52,7 +52,7 @@
             android:name=".ui.SettingsActivity"
             android:parentActivityName=".ui.TimelineActivity"
             />
-
+        <service android:name=".service.AuthenticationService"/>
     </application>
 
 </manifest>

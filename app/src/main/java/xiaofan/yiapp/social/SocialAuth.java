@@ -27,4 +27,10 @@ public class SocialAuth {
     public String getToken() {
         return token;
     }
+
+
+    @Override
+    public String toString() {
+        return "id:" + id +" network:" + network +"token:" + token;
+    }
 }

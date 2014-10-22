@@ -11,11 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
+import com.squareup.otto.Subscribe;
+
 import java.util.Iterator;
 
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.LogoutEvent;
+import xiaofan.yiapp.service.AuthenticationService;
 import xiaofan.yiapp.social.LoginCallback;
 import xiaofan.yiapp.social.LoginError;
 import xiaofan.yiapp.social.SocialApi;
@@ -40,6 +43,7 @@ public class LoginActivity extends BaseActivity{
 
         @Override
         public void onClick(View view) {
+            loginInProgress = true;
             SocialApi.setCurrent(LoginActivity.this,(String)view.getTag());
            if(WeiboApi.TAG.equals(view.getTag())){
                 SocialApi.getCurrent(LoginActivity.this).login(LoginActivity.this,new LoginCallback() {
@@ -50,7 +54,9 @@ public class LoginActivity extends BaseActivity{
 
                     @Override
                     public void success(SocialAuth socialAuth) {
-                        Toast.makeText(LoginActivity.this,"WeiBo login success!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this,"WeiBo login success!" + socialAuth.toString(),Toast.LENGTH_LONG).show();
+                        pd.show();
+                        startService(AuthenticationService.newIntent(LoginActivity.this));
                     }
                 });
            }else{
@@ -80,7 +86,7 @@ public class LoginActivity extends BaseActivity{
         panningBackgroundFrameLayout.setPanningEnabled(true);
         panningBackgroundFrameLayout.setClickToZoomEnabled(true);
         panningBackgroundFrameLayout.setShouldAnimateBackgroundChange(false);
-        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.register_bg));
+        panningBackgroundFrameLayout.setPanningBackground(BitmapFactory.decodeResource(getResources(),R.drawable.rb));
 
         socialButtons = (LinearLayout) findViewById(R.id.social_buttons);
         // login socail buttons
@@ -112,5 +118,17 @@ public class LoginActivity extends BaseActivity{
         if(loginInProgress && SocialApi.getCurrent(this) != null){
             SocialApi.getCurrent(this).onActivityResult(this,requestCode,resultCode,data);
         }
+    }
+
+    @Subscribe
+    public void authenticationSuccess(AuthenticationService.SuccessEvent successEvent){
+        pd.dismiss();
+        Toast.makeText(LoginActivity.this,"authenticationSuccess!",Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void authenticationFailure(AuthenticationService.SuccessEvent failureEvent){
+        pd.dismiss();
+        Toast.makeText(LoginActivity.this,"authenticationFailure!",Toast.LENGTH_LONG).show();
     }
 }

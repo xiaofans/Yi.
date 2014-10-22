@@ -1,7 +1,7 @@
 package xiaofan.yiapp;
 
-import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.multidex.MultiDexApplication;
 
 import se.emilsjolander.sprinkles.Migration;
 import se.emilsjolander.sprinkles.Sprinkles;
@@ -11,7 +11,7 @@ import xiaofan.yiapp.social.SocialApi;
 /**
  * Created by zhaoyu on 2014/10/9.
  */
-public class YiApp  extends Application{
+public class YiApp  extends MultiDexApplication{
 
     private static final String TAG = YiApp.class.getSimpleName();
 

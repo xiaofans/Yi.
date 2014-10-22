@@ -1,6 +1,10 @@
 package xiaofan.yiapp.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,10 +29,35 @@ public class Utils {
 
     public static void hideKeyboard(Activity activity)
     {
-        InputMethodManager localInputMethodManager = (InputMethodManager)activity.getSystemService("input_method");
+        InputMethodManager localInputMethodManager = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         View localView = activity.getCurrentFocus();
         if (localView != null) {
             localInputMethodManager.hideSoftInputFromWindow(localView.getWindowToken(), 2);
+        }
+    }
+    public static boolean isNetworkAvailable(Context context)
+    {
+        NetworkInfo localNetworkInfo = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        return (localNetworkInfo != null) && (localNetworkInfo.isConnected());
+    }
+
+    public static String colorToHex(int color)
+    {
+        Object[] objectArray = new Object[1];
+        objectArray[0] = Integer.valueOf(0xFFFFFF & color);
+        return String.format("#%06X", objectArray);
+    }
+
+    public static int getAppVersion(Context context)
+    {
+        try
+        {
+            int i = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+            return i;
+        }
+        catch (PackageManager.NameNotFoundException localNameNotFoundException)
+        {
+            throw new RuntimeException("Could not get package name: " + localNameNotFoundException);
         }
     }
 
