@@ -77,7 +77,7 @@ public class WeiboApi extends SocialApi{
 
     @Override
     public void onNewIntent(Activity activity, Intent intent) {
-
+        Toast.makeText(activity,"-- onNewIntent --",Toast.LENGTH_LONG).show();
     }
 
 

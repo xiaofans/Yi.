@@ -131,4 +131,12 @@ public class LoginActivity extends BaseActivity{
         pd.dismiss();
         Toast.makeText(LoginActivity.this,"authenticationFailure!",Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(loginInProgress && SocialApi.getCurrent(this) != null){
+            SocialApi.getCurrent(this).onNewIntent(this, intent);
+        }
+    }
 }
