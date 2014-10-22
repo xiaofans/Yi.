@@ -38,11 +38,11 @@ public class WeiboApi extends SocialApi{
     private Activity activity;
     private static final String PREF_OAUTH_TOKEN = "weibo_oauth_token";
     private static final String PREF_OAUTH_NETWORK = "weibo_oauth_network";
-    private static final String PREF_OAUTH_ID = "weibo_oauth_network";
+    private static final String PREF_OAUTH_ID = "weibo_oauth_id";
     @Override
     public void getSocialAuth(Context context, LoginCallback loginCallback) {
         SocialAuth socialAuth = getSocialAuth(context);
-        if(socialAuth == null){
+        if(socialAuth != null){
             loginCallback.success(socialAuth);
         }else {
             loginCallback.failure(new LoginError("NULL",false));
@@ -131,11 +131,11 @@ public class WeiboApi extends SocialApi{
         editor.putString(PREF_OAUTH_TOKEN, socialAuth.getToken());
         editor.putString(PREF_OAUTH_ID,socialAuth.getId());
         editor.putString(PREF_OAUTH_NETWORK,TAG);
-        editor.commit();
+        editor.apply();
     }
 
     private SocialAuth getSocialAuth(Context context){
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(TAG,0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG,0);
         String id = sharedPreferences.getString(PREF_OAUTH_ID,null);
         if(TextUtils.isEmpty(id)) return null;
         String token = sharedPreferences.getString(PREF_OAUTH_TOKEN,null);

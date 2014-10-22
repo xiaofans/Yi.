@@ -4,6 +4,13 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -22,6 +29,8 @@ import xiaofan.yiapp.utils.Utils;
  * Created by zhaoyu on 2014/10/22.
  */
 public class AuthenticationService extends Service{
+
+    private static final String TAG = AuthenticationService.class.getSimpleName();
 
     public static Intent newIntent(Context context){
         return new Intent(context,AuthenticationService.class);
@@ -49,6 +58,7 @@ public class AuthenticationService extends Service{
         socialApi.getSocialAuth(this,new LoginCallback() {
             @Override
             public void failure(LoginError loginError) {
+                Toast.makeText(getApplicationContext(),"auth failure!" + loginError.error,Toast.LENGTH_LONG).show();
                 EventBus.post(new FailureEvent());
                 if(!loginError.networkError){
                     EventBus.post(new LogoutEvent());
@@ -58,11 +68,24 @@ public class AuthenticationService extends Service{
 
             @Override
             public void success(SocialAuth socialAuth) {
-                ApiService.getInstance().login(socialAuth.network,socialAuth.token,socialAuth.id,new AuthenticationCallback());
+                Toast.makeText(getApplicationContext(),"auth success!",Toast.LENGTH_LONG).show();
+                Gson gson = new Gson();
+                try {
+                    ApiService.getInstance().login(new JSONObject(gson.toJson(socialAuth)),new AuthenticationCallback());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
          return START_FLAG_REDELIVERY;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.w(TAG,"destory..");
+    }
+
 
     public static class FailureEvent{}
     public static class SuccessEvent{}

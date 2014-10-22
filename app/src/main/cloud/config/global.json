@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "_default": {
+            "link": "yi"
+        }, 
+        "yi": {
+            "applicationId": "g1QLpI6Z5egPEKEv3zZglnMcFXCuwltS5ECQ8f96", 
+            "masterKey": "PXl7qSGpLY4YNvxL0yKRqzcmcTGrCcDfrjZKkNxZ"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.3.1"
+    }
+}

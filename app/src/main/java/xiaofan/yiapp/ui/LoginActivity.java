@@ -124,10 +124,11 @@ public class LoginActivity extends BaseActivity{
     public void authenticationSuccess(AuthenticationService.SuccessEvent successEvent){
         pd.dismiss();
         Toast.makeText(LoginActivity.this,"authenticationSuccess!",Toast.LENGTH_LONG).show();
+        startActivity(TimelineActivity.newIntent(LoginActivity.this));
     }
 
     @Subscribe
-    public void authenticationFailure(AuthenticationService.SuccessEvent failureEvent){
+    public void authenticationFailure(AuthenticationService.FailureEvent failureEvent){
         pd.dismiss();
         Toast.makeText(LoginActivity.this,"authenticationFailure!",Toast.LENGTH_LONG).show();
     }
