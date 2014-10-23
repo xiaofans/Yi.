@@ -39,6 +39,8 @@ public class WeiboApi extends SocialApi{
     private static final String PREF_OAUTH_TOKEN = "weibo_oauth_token";
     private static final String PREF_OAUTH_NETWORK = "weibo_oauth_network";
     private static final String PREF_OAUTH_ID = "weibo_oauth_id";
+
+
     @Override
     public void getSocialAuth(Context context, LoginCallback loginCallback) {
         SocialAuth socialAuth = getSocialAuth(context);
