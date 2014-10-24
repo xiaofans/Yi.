@@ -19,7 +19,9 @@ import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Part;
+import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
+import xiaofan.yiapp.service.AuthenticationService;
 import xiaofan.yiapp.social.SocialAuth;
 
 /**
@@ -63,5 +65,10 @@ public class ApiService {
         })*/
         @POST("/functions/signup")
         public abstract void login(@Body JSONObject jsonObject,Callback<ParseBase<User>> callback);
+
+        @POST("/users")
+        public abstract void signUpUser(@Body JSONObject jsonObject,Callback<ParseBase<CreateInfo>> callback);
+
+
     }
 }

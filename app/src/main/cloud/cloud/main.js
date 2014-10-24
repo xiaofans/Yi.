@@ -18,6 +18,16 @@ Parse.Cloud.define("signup", function(request, response) {
         console.log(httpResponse.text);
         var resultJson = JSON.parse(httpResponse.text);
         var result = {};
+        var query = new Parse.Query("User");
+        query.equalTo("id", resultJson.id);
+        query.find({
+            success:function(results){
+                result.isRegisterOnServer = true;
+            },
+            error:function(){
+            result.isRegisterOnServer = false;
+            }
+        });
         result.id = resultJson.id;
         result.avatar = resultJson.avatar_large;
         result.name = resultJson.name;
