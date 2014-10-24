@@ -19,6 +19,7 @@ import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Part;
+import xiaofan.yiapp.base.ParseBase;
 import xiaofan.yiapp.social.SocialAuth;
 
 /**
@@ -61,6 +62,6 @@ public class ApiService {
                 "X-Parse-REST-API-Key:"+PARSE_APP_REST_API_KEY
         })*/
         @POST("/functions/signup")
-        public abstract void login(@Body JSONObject jsonObject,Callback<User> callback);
+        public abstract void login(@Body JSONObject jsonObject,Callback<ParseBase<User>> callback);
     }
 }

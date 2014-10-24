@@ -17,6 +17,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.base.ParseBase;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.LogoutEvent;
 import xiaofan.yiapp.social.LoginCallback;
@@ -90,20 +91,21 @@ public class AuthenticationService extends Service{
     public static class FailureEvent{}
     public static class SuccessEvent{}
 
-    class AuthenticationCallback implements Callback<User>{
-
+    class AuthenticationCallback implements Callback<ParseBase<User>>{
         @Override
-        public void success(User user, Response response) {
-             EventBus.post(new SuccessEvent());
+        public void success(ParseBase<User> userParseBase, Response response) {
+            Log.w("AuthenticationCallback","user is:" + userParseBase.result.name +" response is:" + response.toString());
+            EventBus.post(new SuccessEvent());
             stopSelf();
         }
 
         @Override
         public void failure(RetrofitError error) {
-                EventBus.post(new FailureEvent());
-                if(error != null && error.getResponse().getStatus() == 401){
-                    EventBus.post(new LogoutEvent());
-                }
+            Log.w("AuthenticationCallback","error si:" + error.getMessage());
+            EventBus.post(new FailureEvent());
+            if(error != null && error.getResponse().getStatus() == 401){
+                EventBus.post(new LogoutEvent());
+            }
             stopSelf();
         }
     }
