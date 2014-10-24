@@ -29,7 +29,8 @@ public class User extends Model implements Parcelable{
     @Column("name")
     public String name;
     public boolean isRegisterOnServer;
-    public String objectId;
+    public String objectId = "";
+    public long uid;
 
     public static final Creator<User> CREATOR = new Creator<User>(){
 

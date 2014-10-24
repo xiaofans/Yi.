@@ -1,5 +1,6 @@
 package xiaofan.yiapp.api;
 
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 
@@ -13,16 +14,11 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.Headers;
 import retrofit.http.POST;
-import retrofit.http.Part;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
-import xiaofan.yiapp.service.AuthenticationService;
-import xiaofan.yiapp.social.SocialAuth;
 
 /**
  * Created by zhaoyu on 2014/10/22.
@@ -42,14 +38,13 @@ public class ApiService {
     public static Api getInstance(){
         if (instance == null){
             GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+           // gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
             gsonBuilder.registerTypeAdapter(Date.class,new DateAdapter());
             RequestInterceptor interceptor = new RequestInterceptor() {
                 @Override
                 public void intercept(RequestFacade request) {
                         request.addHeader("X-Parse-Application-Id",PARSE_APP_ID);
                         request.addHeader("X-Parse-REST-API-Key",PARSE_APP_REST_API_KEY);
-                        request.addHeader("Content-Type","application/json");
                 }
             };
            instance = new RestAdapter.Builder().setRequestInterceptor(interceptor).setEndpoint(API_BASE).setLog(new AndroidLog("ApiService")).setLogLevel(RestAdapter.LogLevel.FULL).setConverter(new GsonConverter(gsonBuilder.create())).build().create(Api.class);
@@ -66,9 +61,11 @@ public class ApiService {
         @POST("/functions/signup")
         public abstract void login(@Body JSONObject jsonObject,Callback<ParseBase<User>> callback);
 
-        @POST("/users")
-        public abstract void signUpUser(@Body JSONObject jsonObject,Callback<ParseBase<CreateInfo>> callback);
+        @POST("/classes/Users")
+        public abstract void signUpUser(@Body User user,Callback<CreateInfo> callback);
 
+        @PUT("/classes/Users/{objectId}")
+        public abstract void updateUser(@Body User user,@Path("objectId") String objectId,Callback<CreateInfo> callback);
 
     }
 }

@@ -6,7 +6,7 @@ Parse.Cloud.define("hello", function(request, response) {
 });
 
 Parse.Cloud.define("signup", function(request, response) {
-  var p = request.params.name_value_pairs;
+  var p = request.params.nameValuePairs;
    Parse.Cloud.httpRequest({
       url:'https://api.weibo.com/2/users/show.json',
       params: {
@@ -17,21 +17,29 @@ Parse.Cloud.define("signup", function(request, response) {
       success: function(httpResponse) {
         console.log(httpResponse.text);
         var resultJson = JSON.parse(httpResponse.text);
-        var result = {};
-        var query = new Parse.Query("User");
-        query.equalTo("id", resultJson.id);
+        var query = new Parse.Query("Users");
+        query.equalTo("uid", resultJson.id);
         query.find({
             success:function(results){
+                var result = {};
+                result.id = resultJson.id;
                 result.isRegisterOnServer = true;
+                result.avatar = resultJson.avatar_large;
+                result.name = resultJson.name;
+                result.objectId = results[0].id;
+                response.success(result);
             },
             error:function(){
-            result.isRegisterOnServer = false;
+                var result = {};
+                result.id = resultJson.id;
+                result.isRegisterOnServer = false;
+                result.avatar = resultJson.avatar_large;
+                result.name = resultJson.name;
+                response.success(result);
             }
         });
-        result.id = resultJson.id;
-        result.avatar = resultJson.avatar_large;
-        result.name = resultJson.name;
-        response.success(result);
+
+
       },
       error: function(httpResponse) {
         console.error('Request failed with response code ' + httpResponse.status);

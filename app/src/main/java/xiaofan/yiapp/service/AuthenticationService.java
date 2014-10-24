@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.parse.Parse;
 import com.parse.SignUpCallback;
 
 import org.json.JSONException;
@@ -26,6 +27,7 @@ import xiaofan.yiapp.social.LoginCallback;
 import xiaofan.yiapp.social.LoginError;
 import xiaofan.yiapp.social.SocialApi;
 import xiaofan.yiapp.social.SocialAuth;
+import xiaofan.yiapp.utils.BCrypt;
 import xiaofan.yiapp.utils.Utils;
 
 /**
@@ -96,25 +98,22 @@ public class AuthenticationService extends Service{
     class AuthenticationCallback implements Callback<ParseBase<User>>{
         @Override
         public void success(ParseBase<User> userParseBase, Response response) {
-            Log.w("AuthenticationCallback","user is:" + userParseBase.result.name +" response is:" + response.toString());
+            Log.w("AuthenticationCallback","user is:" + new Gson().toJson(userParseBase.result) +" response is:" + response.getBody().toString());
             if(userParseBase != null && userParseBase.result != null){
+                Gson gson = new Gson();
                 if(userParseBase.result.isRegisterOnServer){
-
+                        userParseBase.result.uid = userParseBase.result.id;
+                        ApiService.getInstance().updateUser(userParseBase.result,userParseBase.result.objectId,new UpdateUserCallback(userParseBase.result));
                 }else{
-                    Gson gson = new Gson();
-                    try {
-                        ApiService.getInstance().signUpUser(new JSONObject(gson.toJson(userParseBase.result)),new SignupUserCallback(userParseBase.result));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                        userParseBase.result.uid = userParseBase.result.id;
+                        ApiService.getInstance().signUpUser(userParseBase.result,new SignupUserCallback(userParseBase.result));
                 }
-
             }else{
                 EventBus.post(new FailureEvent());
                 EventBus.post(new LogoutEvent());
                 stopSelf();
             }
-
+            stopSelf();
         }
 
         @Override
@@ -128,7 +127,7 @@ public class AuthenticationService extends Service{
         }
     }
 
-    public class SignupUserCallback implements Callback<ParseBase<CreateInfo>>{
+    public class SignupUserCallback implements Callback<CreateInfo>{
         public User user;
         private  final String TAG = SignupUserCallback.class.getSimpleName();
 
@@ -138,17 +137,53 @@ public class AuthenticationService extends Service{
 
 
         @Override
-        public void success(ParseBase<CreateInfo> createInfoParseBase, Response response) {
-            if(createInfoParseBase != null && createInfoParseBase.result != null){
-                user.objectId = createInfoParseBase.result.objectId;
+        public void success(CreateInfo createInfoParseBase, Response response) {
+            if(createInfoParseBase != null && createInfoParseBase != null){
+                user.objectId = createInfoParseBase.objectId;
                 Log.w(TAG,"sign up user success!");
-                EventBus.post(new SuccessEvent());
+                user.me = true;
+                if(user.save()){
+                    EventBus.post(new SuccessEvent());
+                }else{
+                    EventBus.post(new FailureEvent());
+                }
             }
         }
 
         @Override
         public void failure(RetrofitError error) {
             Log.w(TAG,"sign up user failed!");
+            EventBus.post(new FailureEvent());
+            EventBus.post(new LogoutEvent());
+        }
+    }
+
+    public class UpdateUserCallback implements Callback<CreateInfo>{
+        public User user;
+        private  final String TAG = SignupUserCallback.class.getSimpleName();
+
+        UpdateUserCallback(User user) {
+            this.user = user;
+        }
+
+
+        @Override
+        public void success(CreateInfo createInfoParseBase, Response response) {
+            if(createInfoParseBase != null){
+                user.objectId = createInfoParseBase.objectId;
+                Log.w(TAG,"update user success!");
+                user.me = true;
+                if(user.save()){
+                    EventBus.post(new SuccessEvent());
+                }else{
+                    EventBus.post(new FailureEvent());
+                }
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.w(TAG,"update user user failed!");
             EventBus.post(new FailureEvent());
             EventBus.post(new LogoutEvent());
         }
