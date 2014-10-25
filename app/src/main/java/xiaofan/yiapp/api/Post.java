@@ -5,10 +5,12 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
+import retrofit.mime.TypedFile;
 import se.emilsjolander.sprinkles.Model;
 import se.emilsjolander.sprinkles.annotations.Column;
 import se.emilsjolander.sprinkles.annotations.Key;
 import se.emilsjolander.sprinkles.annotations.Table;
+import xiaofan.yiapp.api.entity.UploadFile;
 
 /**
  * Created by zhaoyu on 2014/10/19.
@@ -56,6 +58,8 @@ public class Post extends Model implements Parcelable{
     public String text;
     @Column("type")
     public String type;
+
+    public UploadFile imageFile;
 
     public Post(){}
     private Post(Parcel parcel){

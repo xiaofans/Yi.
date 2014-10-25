@@ -54,6 +54,7 @@
             />
         <activity android:theme="@style/ProfileTheme" android:name=".ui.ProfileActivity" />
         <service android:name=".service.AuthenticationService"/>
+        <service android:name=".service.UploadPostService"/>
     </application>
 
 </manifest>

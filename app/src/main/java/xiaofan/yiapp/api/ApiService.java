@@ -14,8 +14,11 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
+import retrofit.http.Headers;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Part;
 import retrofit.http.Path;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
@@ -66,6 +69,9 @@ public class ApiService {
 
         @PUT("/classes/Users/{objectId}")
         public abstract void updateUser(@Body User user,@Path("objectId") String objectId,Callback<CreateInfo> callback);
+
+        @POST("/classes/Posts")
+        public abstract void uploadPost(@Body Post post,Callback<CreateInfo> callback);
 
     }
 }

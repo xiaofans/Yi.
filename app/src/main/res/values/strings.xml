@@ -18,4 +18,7 @@
     <string name="could_not_save_file">存储卡不可用</string>
     <string name="could_not_open_image">无法打开图片</string>
     <string name="upload_post">上传中</string>
+    <string name="sorry">抱歉</string>
+    <string name="ok">确定</string>
+    <string name="no_internetwork_connection">无网络连接</string>
 </resources>

@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -36,10 +37,12 @@ import se.emilsjolander.sprinkles.OneQuery;
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.api.DateAdapter;
 import xiaofan.yiapp.api.Post;
+import xiaofan.yiapp.api.PostTemplate;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.BaseFragment;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.UserClickEvent;
+import xiaofan.yiapp.service.UploadPostService;
 import xiaofan.yiapp.utils.CameraUtils;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
@@ -237,6 +240,22 @@ public class UploadPostFragment extends BaseFragment{
         }else{
             Toast.makeText(getActivity(), R.string.could_not_find_gallery, Toast.LENGTH_LONG).show();
         }
+    }
+    @OnClick(R.id.upload)
+    public void onUploadClick(){
+        if(!Utils.isNetworkAvailable(getActivity())){
+            Utils.showErrorDialog(getActivity(),R.string.no_internetwork_connection);
+            return;
+        }
+        Utils.hideKeyboard(getActivity());
+        root.animate().scaleX(0.8F).scaleY(0.8F).setInterpolator(new OvershootInterpolator(1.5F)).start();
+        PostTemplate postTemplate = new PostTemplate();
+        postTemplate.type = postType;
+        postTemplate.text = postText.getText().toString();
+        postTemplate.image = postImageUri;
+        postTemplate.color = Utils.colorToHex(postColor);
+        getActivity().startService(UploadPostService.newIntent(getActivity(),postTemplate));
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package xiaofan.yiapp.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -11,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import java.lang.ref.WeakReference;
+
 import xiaofan.yiapp.R;
 
 /**
@@ -18,6 +21,8 @@ import xiaofan.yiapp.R;
  */
 public class Utils {
     private static final String TAG = Utils.class.getSimpleName();
+
+    private static WeakReference<AlertDialog> errorDialog;
 
     public static void addSystemUIPadding(Activity activity, View contentView)
     {
@@ -67,6 +72,19 @@ public class Utils {
     {
         int[] colors = {R.color.hipster_blue, R.color.hipster_green, R.color.hipster_red, R.color.hipster_orange, R.color.hipster_denim, R.color.hipster_purple };
         return context.getResources().getColor(colors[new java.util.Random().nextInt(colors.length)]);
+    }
+
+    public static void showErrorDialog(Context context,int sourceId){
+        showErrorDialog(context,context.getResources().getString(sourceId));
+    }
+
+    public static void showErrorDialog(Context context,String message){
+        if(errorDialog != null && errorDialog.get() != null && errorDialog.get().isShowing()){
+            errorDialog.get().dismiss();
+            errorDialog.clear();
+        }
+        errorDialog = new WeakReference<AlertDialog>(new AlertDialog.Builder(context).setTitle(R.string.sorry).setMessage(message).setPositiveButton(R.string.ok,null).create());
+        errorDialog.get().show();
     }
 
 }
