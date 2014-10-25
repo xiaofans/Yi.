@@ -138,9 +138,39 @@ public class UploadPostFragment extends BaseFragment{
         postText.addTextChangedListener(textChangeListener);
         me = QueryBuilder.me().get();
         QueryBuilder.me().getAsync(getLoaderManager(),authenticatedUserResult,User.class);
+        this.postText.addTextChangedListener(this.textChangeListener);
+        this.pd = new ProgressDialog(getActivity());
+        this.pd.setMessage(getString(R.string.upload_post));
+        this.pd.setCancelable(false);
+        if(savedInstanceState != null){
+            postType = savedInstanceState.getString("postType");
+            postColor = savedInstanceState.getInt("postColor");
+            postImage = savedInstanceState.getParcelable("postImage");
+            postImageUri = savedInstanceState.getParcelable("postImageUri");
+            if(postImage != null || postText.getText().length() > 0){
+                upload.setVisibility(View.VISIBLE);
+                if(!Post.TYPE_TEXT.equals(postType)){
+                    postBackground.setPanningEnabled(true);
+                    postBackground.setBackgroundColor(-13421773);
+                    postBackground.setPanningBackground(this.postImage);
+                }else{
+                    this.postBackground.setPanningEnabled(false);
+                    this.postBackground.setPanningBackground(null);
+                    this.postBackground.setBackgroundColor(this.postColor);
+                }
+            }
+        }else{
+            this.upload.setVisibility(View.GONE);
+            this.postType = Post.TYPE_TEXT;
+            this.postColor = Utils.randomHipsterColor(getActivity());
+            this.postImage = null;
+            this.postImageUri = null;
+            this.postBackground.setPanningEnabled(false);
+            this.postBackground.setPanningBackground(null);
+            this.postBackground.setBackgroundColor(this.postColor);
+        }
         return root;
     }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -148,6 +178,15 @@ public class UploadPostFragment extends BaseFragment{
         if(intent.getAction() == "android.intent.action.SEND"){
 
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("postColor",postColor);
+        outState.putString("postType",postType);
+        outState.putParcelable("postImage",postImage);
+        outState.putParcelable("postImageUri",postImageUri);
     }
 
     @OnClick(R.id.color)

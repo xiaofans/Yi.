@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import xiaofan.yiapp.R;
+
 /**
  * Created by zhaoyu on 2014/10/10.
  */
@@ -59,6 +61,12 @@ public class Utils {
         {
             throw new RuntimeException("Could not get package name: " + localNameNotFoundException);
         }
+    }
+
+    public static int randomHipsterColor(Context context)
+    {
+        int[] colors = {R.color.hipster_blue, R.color.hipster_green, R.color.hipster_red, R.color.hipster_orange, R.color.hipster_denim, R.color.hipster_purple };
+        return context.getResources().getColor(colors[new java.util.Random().nextInt(colors.length)]);
     }
 
 }

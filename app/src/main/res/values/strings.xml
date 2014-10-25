@@ -17,4 +17,5 @@
     <string name="could_not_find_camera">找不到相机</string>
     <string name="could_not_save_file">存储卡不可用</string>
     <string name="could_not_open_image">无法打开图片</string>
+    <string name="upload_post">上传中</string>
 </resources>
