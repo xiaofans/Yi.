@@ -28,4 +28,13 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowActionBar">false</item>
     </style>
+    <style name="BtnFollow">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/text_follow_toggle</item>
+        <item name="android:background">@drawable/btn_follow_toggle</item>
+        <item name="android:layout_width">72.0dip</item>
+        <item name="android:layout_height">32.0dip</item>
+        <item name="android:textOn">取消关注</item>
+        <item name="android:textOff">关注</item>
+    </style>
 </resources>

@@ -19,7 +19,7 @@ import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.BaseFragment;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.LogoutEvent;
-import xiaofan.yiapp.events.UserClickedEvent;
+import xiaofan.yiapp.events.UserClickEvent;
 import xiaofan.yiapp.utils.QueryBuilder;
 
 /**
@@ -82,7 +82,7 @@ public class DrawerFragment extends BaseFragment{
 
     @OnClick(R.id.avatar)
     public void profile(){
-        EventBus.post(new UserClickedEvent(me));
+        EventBus.post(new UserClickEvent(me));
     }
 
     public static  class FollowersClickedEvent{}

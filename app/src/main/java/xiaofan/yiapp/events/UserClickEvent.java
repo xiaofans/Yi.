@@ -5,9 +5,9 @@ import xiaofan.yiapp.api.User;
 /**
  * Created by zhaoyu on 2014/10/21.
  */
-public class UserClickedEvent {
+public class UserClickEvent {
     public User user;
-    public UserClickedEvent(User user){
+    public UserClickEvent(User user){
         this.user = user;
     }
 }

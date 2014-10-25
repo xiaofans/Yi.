@@ -13,4 +13,8 @@
     <string name="settings">设置</string>
     <string name="log_out">登出</string>
     <string name="new_post_text_hint">"在这一瞬间，你在回忆些什么?"</string>
+    <string name="could_not_find_gallery">找不到相册</string>
+    <string name="could_not_find_camera">找不到相机</string>
+    <string name="could_not_save_file">存储卡不可用</string>
+    <string name="could_not_open_image">无法打开图片</string>
 </resources>

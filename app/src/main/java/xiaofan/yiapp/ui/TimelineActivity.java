@@ -22,6 +22,7 @@ import xiaofan.yiapp.adapter.PostsFragmentAdapter;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.AuthenticatedActivity;
+import xiaofan.yiapp.events.UserClickEvent;
 import xiaofan.yiapp.fragment.DrawerFragment;
 import xiaofan.yiapp.utils.Utils;
 
@@ -156,5 +157,11 @@ public class TimelineActivity extends AuthenticatedActivity{
                 startActivity(SettingsActivity.newIntent(TimelineActivity.this));
             }
         });
+    }
+
+    @Subscribe
+    public void userSelected(UserClickEvent userClickEvent)
+    {
+        startActivity(ProfileActivity.newIntent(this, userClickEvent.user));
     }
 }

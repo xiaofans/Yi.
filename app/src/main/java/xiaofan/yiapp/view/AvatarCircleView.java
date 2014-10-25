@@ -94,7 +94,7 @@ public class AvatarCircleView extends View implements Target{
         canvas.drawBitmap(avater,rect,rect2,paint);
         BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(),bitmap);
         bitmapDrawable.setBounds(0,0,bitmap.getWidth(),bitmap.getHeight());
-        return null;
+        return bitmapDrawable;
     }
 
     @Override

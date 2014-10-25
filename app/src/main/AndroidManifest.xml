@@ -52,6 +52,7 @@
             android:name=".ui.SettingsActivity"
             android:parentActivityName=".ui.TimelineActivity"
             />
+        <activity android:theme="@style/ProfileTheme" android:name=".ui.ProfileActivity" />
         <service android:name=".service.AuthenticationService"/>
     </application>
 

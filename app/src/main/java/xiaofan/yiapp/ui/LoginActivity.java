@@ -24,6 +24,7 @@ import xiaofan.yiapp.social.LoginError;
 import xiaofan.yiapp.social.SocialApi;
 import xiaofan.yiapp.social.SocialAuth;
 import xiaofan.yiapp.social.WeiboApi;
+import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
 import xiaofan.yiapp.base.BaseActivity;
 import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
@@ -69,6 +70,13 @@ public class LoginActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        if(SocialApi.getCurrent(this) != null){
+            if(QueryBuilder.me().get() != null){
+                startService(AuthenticationService.newIntent(this));
+                startActivity(TimelineActivity.newIntent(this));
+                finish();
+            }
+        }
         setUpViews();
     }
     private void setUpViews() {
@@ -123,14 +131,13 @@ public class LoginActivity extends BaseActivity{
     @Subscribe
     public void authenticationSuccess(AuthenticationService.SuccessEvent successEvent){
         pd.dismiss();
-        Toast.makeText(LoginActivity.this,"authenticationSuccess!",Toast.LENGTH_LONG).show();
         startActivity(TimelineActivity.newIntent(LoginActivity.this));
     }
 
     @Subscribe
     public void authenticationFailure(AuthenticationService.FailureEvent failureEvent){
         pd.dismiss();
-        Toast.makeText(LoginActivity.this,"authenticationFailure!",Toast.LENGTH_LONG).show();
+        Toast.makeText(LoginActivity.this,"登录失败，请重试!",Toast.LENGTH_LONG).show();
     }
 
     @Override
