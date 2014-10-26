@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 import retrofit.Callback;
@@ -27,7 +30,6 @@ import xiaofan.yiapp.api.entity.UploadFile;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.LogoutEvent;
-import xiaofan.yiapp.events.PostTimeoutEvent;
 import xiaofan.yiapp.social.LoginCallback;
 import xiaofan.yiapp.social.LoginError;
 import xiaofan.yiapp.social.SocialApi;
@@ -70,14 +72,13 @@ public class UploadPostService extends Service{
 
             @Override
             public void success(SocialAuth socialAuth) {
-                PostUploadTask uploadTask = new PostUploadTask(socialAuth);
+                PostUploadTask uploadTask = new PostUploadTask(socialAuth,postTemplate);
                 uploadTask.execute(postTemplate);
             }
         });
         return super.onStartCommand(intent, flags, startId);
     }
-    private Post uploadPost(String network,
-                            String token,
+    private Post uploadPost(
                             final String id,
                             final String type,
                             final String text,
@@ -88,9 +89,9 @@ public class UploadPostService extends Service{
         UploadService.getInstance().uploadPostFile(file.getName(),typedFile,new Callback<UploadFile>() {
 
             @Override
-            public void success(UploadFile uploadFile, Response response) {
+            public void success(final UploadFile uploadFile, Response response) {
                 if(uploadFile != null){
-                    Post post = new Post();
+                    final Post post = new Post();
                     post.authorId = Long.parseLong(id);
                     post.color = color;
                     post.type = type;
@@ -100,12 +101,27 @@ public class UploadPostService extends Service{
                     ApiService.getInstance().uploadPost(post,new Callback<CreateInfo>() {
                         @Override
                         public void success(CreateInfo createInfo, Response response) {
-                            Log.w("UploadPostService","Upload post success!");
+                           if(createInfo != null){
+                               post.objectId = createInfo.objectId;
+                               post.id = post.objectId.hashCode();
+                               post.image = uploadFile.url;
+                               SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd\'T\'hh:ss:mm.SSS\'Z\'");
+                               try {
+                                   post.createdAt = sf.parse(createInfo.createdAt);
+                               } catch (ParseException e) {
+                                   e.printStackTrace();
+                               }
+                               post.save();
+                               EventBus.post(new SuccessEvent(post));
+                           }else{
+                              EventBus.post(new FailureEvent());
+                           }
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
                             Log.w("UploadPostService","Upload post failure!");
+                            EventBus.post(new FailureEvent());
                         }
                     });
                 }
@@ -121,15 +137,17 @@ public class UploadPostService extends Service{
         return null;
     }
     private class PostUploadTask
-            extends AsyncTask<PostTemplate, Void, Post>
+            extends AsyncTask<PostTemplate, Void, File>
     {
         private SocialAuth authInfo;
-        public PostUploadTask(SocialAuth socialAuth) {
+        private PostTemplate postTemplate;
+        public PostUploadTask(SocialAuth socialAuth,PostTemplate postTemplate) {
             this.authInfo  = socialAuth;
+            this.postTemplate = postTemplate;
         }
 
         @Override
-        protected Post doInBackground(PostTemplate... postTemplates) {
+        protected File doInBackground(PostTemplate... postTemplates) {
             PostTemplate postTemplate = postTemplates[0];
             boolean isImagePost = Post.TYPE_IMAGE.equals(postTemplate.type);
             File file = null;
@@ -145,27 +163,21 @@ public class UploadPostService extends Service{
                     Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(postTemplate.image),null,options2);
                     if(bitmap.getHeight() > 1280){
                         bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth() * ((double)1280 / (double)bitmap.getHeight())), 1280, true);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG,80,new FileOutputStream(file));
                     }
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,80,new FileOutputStream(file));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }catch (IOException e){
                     e.printStackTrace();
                 }
             }
-            return uploadPost(authInfo.network,authInfo.token,authInfo.id,postTemplate.type,postTemplate.text,postTemplate.color,file);
+            return file;
         }
 
         @Override
-        protected void onPostExecute(Post post) {
-            super.onPostExecute(post);
-            if(post == null){
-                EventBus.post(new FailureEvent());
-                EventBus.post(new PostTimeoutEvent());
-            }else{
-                EventBus.post(new SuccessEvent(post));
-            }
-            stopSelf();
+        protected void onPostExecute(File file) {
+            super.onPostExecute(file);
+            uploadPost(authInfo.id,postTemplate.type,postTemplate.text,postTemplate.color,file);
         }
     }
 

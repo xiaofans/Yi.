@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -249,6 +250,7 @@ public class UploadPostFragment extends BaseFragment{
         }
         Utils.hideKeyboard(getActivity());
         root.animate().scaleX(0.8F).scaleY(0.8F).setInterpolator(new OvershootInterpolator(1.5F)).start();
+        pd.show();
         PostTemplate postTemplate = new PostTemplate();
         postTemplate.type = postType;
         postTemplate.text = postText.getText().toString();
@@ -269,6 +271,26 @@ public class UploadPostFragment extends BaseFragment{
             }
             bitmapDecoderTask.execute(postImageUri);
         }
+    }
+
+    @Subscribe
+    public void uploadSuccess(UploadPostService.SuccessEvent successEvent){
+        pd.dismiss();
+        root.animate().scaleX(1.0f).scaleY(1.0f).start();
+        postType = Post.TYPE_TEXT;
+        postColor = Utils.randomHipsterColor(getActivity());
+        postImage = null;
+        postImageUri = null;
+        postBackground.setPanningEnabled(false);
+        postBackground.setPanningBackground(null);
+        postBackground.setBackgroundColor(postColor);
+        postText.setText(null);
+    }
+    @Subscribe
+    public void uploadFailure(UploadPostService.FailureEvent failureEvent){
+        pd.dismiss();
+        root.animate().scaleX(1.0f).scaleY(1.0f).start();
+        Utils.showErrorDialog(getActivity(),R.string.upload_fialure_message);
     }
 
     class BitmapDecoderTask

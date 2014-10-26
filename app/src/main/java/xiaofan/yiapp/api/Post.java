@@ -58,6 +58,9 @@ public class Post extends Model implements Parcelable{
     public String text;
     @Column("type")
     public String type;
+    // parse use
+    @Column("object_id")
+    public String objectId;
 
     public UploadFile imageFile;
 
