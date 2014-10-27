@@ -14,12 +14,14 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
 
@@ -72,6 +74,9 @@ public class ApiService {
 
         @POST("/classes/Posts")
         public abstract void uploadPost(@Body Post post,Callback<CreateInfo> callback);
+
+        @GET("/classes/Posts")
+        public abstract void getPosts(@Query("authorId") long authorId);
 
     }
 }
