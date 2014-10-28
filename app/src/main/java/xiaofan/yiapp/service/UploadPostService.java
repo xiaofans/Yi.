@@ -96,6 +96,7 @@ public class UploadPostService extends Service{
                     post.color = color;
                     post.type = type;
                     post.text = text;
+                    post.image = uploadFile.url;
                     post.imageFile = uploadFile;
                     post.imageFile.__type = "File";
                     ApiService.getInstance().uploadPost(post,new Callback<CreateInfo>() {
@@ -104,7 +105,6 @@ public class UploadPostService extends Service{
                            if(createInfo != null){
                                post.objectId = createInfo.objectId;
                                post.id = post.objectId.hashCode();
-                               post.image = uploadFile.url;
                                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd\'T\'hh:ss:mm.SSS\'Z\'");
                                try {
                                    post.createdAt = sf.parse(createInfo.createdAt);

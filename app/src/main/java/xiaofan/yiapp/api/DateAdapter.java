@@ -9,6 +9,8 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -17,11 +19,19 @@ import java.util.Date;
 public class DateAdapter implements JsonSerializer<Date>,JsonDeserializer<Date>{
     @Override
     public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        return new Date(1000L * jsonElement.getAsLong());
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd\'T\'hh:ss:mm.SSS\'Z\'");
+        Date date = null;
+        try {
+            date = sf.parse(jsonElement.getAsString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
     @Override
     public JsonElement serialize(Date date, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(Long.valueOf(date.getTime() / 1000L));
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd\'T\'hh:ss:mm.SSS\'Z\'");
+        return new JsonPrimitive(sf.format(date));
     }
 }

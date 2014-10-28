@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import xiaofan.yiapp.R;
@@ -26,8 +28,11 @@ public class ImagePostFragment extends PostFragment{
         View view = inflater.inflate(R.layout.fragment_image_post,container,false);
         ButterKnife.inject(this, view);
         Utils.addSystemUIPadding(getActivity(), this.postView);
+        this.content.setText(this.post.text);
+        this.commentCounter.setText("" + this.post.commentCount);
+        this.heartCounter.setText("" + this.post.heartCount);
         this.postView.setShouldAnimateBackgroundChange(true);
-        this.postView.setPanningBackground(BitmapFactory.decodeResource(getResources(), R.drawable.l));
+        Picasso.with(getActivity()).load(this.post.image).noFade().into(this.postView);
         return view;
     }
 

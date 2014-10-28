@@ -92,7 +92,7 @@ public abstract class NewFragmentStatePagerAdapter extends PagerAdapter{
         return fragment;
     }
 
-    @Override
+ /*   @Override
     public void notifyDataSetChanged() {
         long[] newItemIds = new long[getCount()];
         for (int i = 0; i < newItemIds.length; i++){
@@ -123,7 +123,7 @@ public abstract class NewFragmentStatePagerAdapter extends PagerAdapter{
                 if(j < mFragments.size()){
                     Fragment fragment = mFragments.get(j);
                     if(fragment != null){
-                        while (newFragments.size() <= k){
+                        while (newFragments.size() <= k || k == -2){
                             newFragments.add(null);
                         }
                         newFragments.set(j,fragment);
@@ -136,7 +136,7 @@ public abstract class NewFragmentStatePagerAdapter extends PagerAdapter{
             mSavedState = newSavedState;
         }
         super.notifyDataSetChanged();
-    }
+    }*/
 
 
     @Override

@@ -6,7 +6,9 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
@@ -76,7 +78,7 @@ public class ApiService {
         public abstract void uploadPost(@Body Post post,Callback<CreateInfo> callback);
 
         @GET("/classes/Posts")
-        public abstract void getPosts(@Query("authorId") long authorId);
+        public ParseBase<List<Post>>  getPosts(@Query("authorId") long authorId);
 
     }
 }
