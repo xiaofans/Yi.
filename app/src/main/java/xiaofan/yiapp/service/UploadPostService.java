@@ -85,45 +85,34 @@ public class UploadPostService extends Service{
                             final String color,
                             File file)
     {
+        final Post post = new Post();
+        post.authorId = Long.parseLong(id);
+        post.color = color;
+        post.type = type;
+        post.text = text;
+        if(file == null){
+            uploadPost___(post);
+        }else{
+            uploadImagePost(post,file);
+        }
+
+
+        return null;
+    }
+
+    private void uploadImagePost(final Post post,File file) {
         final TypedFile typedFile = new TypedFile("image/jpeg", file);
         UploadService.getInstance().uploadPostFile(file.getName(),typedFile,new Callback<UploadFile>() {
 
             @Override
             public void success(final UploadFile uploadFile, Response response) {
                 if(uploadFile != null){
-                    final Post post = new Post();
-                    post.authorId = Long.parseLong(id);
-                    post.color = color;
-                    post.type = type;
-                    post.text = text;
                     post.image = uploadFile.url;
                     post.imageFile = uploadFile;
                     post.imageFile.__type = "File";
-                    ApiService.getInstance().uploadPost(post,new Callback<CreateInfo>() {
-                        @Override
-                        public void success(CreateInfo createInfo, Response response) {
-                           if(createInfo != null){
-                               post.objectId = createInfo.objectId;
-                               post.id = post.objectId.hashCode();
-                               SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd\'T\'hh:ss:mm.SSS\'Z\'");
-                               try {
-                                   post.createdAt = sf.parse(createInfo.createdAt);
-                               } catch (ParseException e) {
-                                   e.printStackTrace();
-                               }
-                               post.save();
-                               EventBus.post(new SuccessEvent(post));
-                           }else{
-                              EventBus.post(new FailureEvent());
-                           }
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.w("UploadPostService","Upload post failure!");
-                            EventBus.post(new FailureEvent());
-                        }
-                    });
+                    uploadPost___(post);
+                }else{
+                    EventBus.post(new FailureEvent());
                 }
             }
 
@@ -133,9 +122,39 @@ public class UploadPostService extends Service{
                 stopSelf();
             }
         });
-
-        return null;
     }
+
+    private void uploadPost___(final Post post) {
+        ApiService.getInstance().uploadPost(post,new Callback<CreateInfo>() {
+            @Override
+            public void success(CreateInfo createInfo, Response response) {
+                if(createInfo != null){
+                    post.objectId = createInfo.objectId;
+                    post.id = post.objectId.hashCode();
+                    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd\'T\'hh:ss:mm.SSS\'Z\'");
+                    try {
+                        post.createdAt = sf.parse(createInfo.createdAt);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    post.save();
+                    EventBus.post(new SuccessEvent(post));
+                }else{
+                    EventBus.post(new FailureEvent());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.w("UploadPostService","Upload post failure!");
+                EventBus.post(new FailureEvent());
+            }
+        });
+    }
+
+
+
+
     private class PostUploadTask
             extends AsyncTask<PostTemplate, Void, File>
     {

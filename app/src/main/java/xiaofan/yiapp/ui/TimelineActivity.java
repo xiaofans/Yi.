@@ -131,20 +131,12 @@ public class TimelineActivity extends AuthenticatedActivity{
         pager.setOnPageChangeListener(pageScrollListener);
         me = QueryBuilder.me().get();
         QueryBuilder.timeline(me).getAsync(getLoaderManager(), this.onTimelineLoaded, Connection.class);
-        testUI();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("current_item",pager.getCurrentItem());
-
-    }
-
-    private void testUI() {
-        List<Post> list = new ArrayList<Post>();
-        pagerAdapter.setPosts(list);
-        startService(PostsSyncService.newIntent(this, QueryBuilder.me().get()));
     }
 
     public static Intent newIntent(Context context)

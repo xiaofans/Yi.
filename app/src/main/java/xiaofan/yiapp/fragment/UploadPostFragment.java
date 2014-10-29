@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -151,18 +152,23 @@ public class UploadPostFragment extends BaseFragment{
             postColor = savedInstanceState.getInt("postColor");
             postImage = savedInstanceState.getParcelable("postImage");
             postImageUri = savedInstanceState.getParcelable("postImageUri");
-            if(postImage != null || postText.getText().length() > 0){
-                upload.setVisibility(View.VISIBLE);
+            String postTextStr = savedInstanceState.getString("postText");
+            if(!TextUtils.isEmpty(postTextStr)){
+                postText.setText(postTextStr);
+            }
+             upload.setVisibility(View.VISIBLE);
                 if(!Post.TYPE_TEXT.equals(postType)){
                     postBackground.setPanningEnabled(true);
-                    postBackground.setBackgroundColor(-13421773);
-                    postBackground.setPanningBackground(this.postImage);
+                    postBackground.setBackgroundColor(postColor);
+                    if(postImage != null)
+                    {
+                        postBackground.setPanningBackground(this.postImage);
+                    }
                 }else{
                     this.postBackground.setPanningEnabled(false);
                     this.postBackground.setPanningBackground(null);
-                    this.postBackground.setBackgroundColor(this.postColor);
+                    this.postBackground.setBackgroundColor(postColor);
                 }
-            }
         }else{
             this.upload.setVisibility(View.GONE);
             this.postType = Post.TYPE_TEXT;
@@ -191,6 +197,7 @@ public class UploadPostFragment extends BaseFragment{
         outState.putString("postType",postType);
         outState.putParcelable("postImage",postImage);
         outState.putParcelable("postImageUri",postImageUri);
+        outState.putString("postText", postText.getText().toString());
     }
 
     @OnClick(R.id.color)
