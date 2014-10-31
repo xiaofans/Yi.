@@ -49,7 +49,7 @@ public class Post extends Model implements Parcelable{
     public  int heartCount;
     @Column("id")
     @Key
-    public  long id;
+    public  long pid;
     @Column("image")
     public String image;
     @Column("share_link")
@@ -66,7 +66,7 @@ public class Post extends Model implements Parcelable{
 
     public Post(){}
     private Post(Parcel parcel){
-        this.id = parcel.readLong();
+        this.pid = parcel.readLong();
         this.authorId = parcel.readLong();
         this.type = parcel.readString();
         this.createdAt = (Date) parcel.readSerializable();
@@ -86,7 +86,7 @@ public class Post extends Model implements Parcelable{
 
     @Override
     public int hashCode() {
-        return (id + "-" +authorId).hashCode();
+        return (pid + "-" +authorId).hashCode();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class Post extends Model implements Parcelable{
         boolean isInstance = o instanceof Post;
         if(!isInstance) return false;
         Post post = (Post) o;
-        if(this.id == post.id && this.authorId == post.id){
+        if(this.pid == post.pid && this.authorId == post.authorId){
             return true;
         }
         return false;
@@ -108,7 +108,7 @@ public class Post extends Model implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
+        parcel.writeLong(pid);
         parcel.writeLong(authorId);
         parcel.writeString(type);
         parcel.writeSerializable(createdAt);

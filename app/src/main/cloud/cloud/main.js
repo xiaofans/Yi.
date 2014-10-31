@@ -48,3 +48,33 @@ Parse.Cloud.define("signup", function(request, response) {
     });
 
 });
+
+Parse.Cloud.job("setPostsId",function(request,status){
+     var query = new Parse.Query("Posts");
+      query.each(function(post) {
+            var pid = post.get("pid");
+            if(undefined == pid){
+                post.set("pid",post.id.hashCode());
+            }
+            post.save();
+           return null;
+       }).then(function() {
+         // Set the job's success status
+         status.success("Migration completed successfully.");
+       }, function(error) {
+         // Set the job's error status
+         status.error("Uh oh, something went wrong.");
+       });
+});
+
+
+ String.prototype.hashCode = function(){
+ 	var hash = 0;
+ 	if (this.length == 0) return hash;
+ 	for (i = 0; i < this.length; i++) {
+ 		char = this.charCodeAt(i);
+ 		hash = ((hash<<5)-hash)+char;
+ 		hash = hash & hash; // Convert to 32bit integer
+ 	}
+ 	return hash;
+ }

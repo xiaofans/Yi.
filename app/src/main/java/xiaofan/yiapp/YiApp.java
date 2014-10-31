@@ -23,7 +23,7 @@ public class YiApp  extends MultiDexApplication{
             @Override
             protected void doMigration(SQLiteDatabase sqLiteDatabase) {
                 sqLiteDatabase.execSQL("CREATE TABLE Users (id INTEGER PRIMARY KEY,me INTEGER,name TEXT,avatar TEXT,followers_count INTEGER,followings_count INTEGER)");
-                sqLiteDatabase.execSQL("CREATE TABLE Posts (id INTEGER,type TEXT,created_at INTEGER,text TEXT,image TEXT,color TEXT,share_link TEXT,object_id text,author_id INTEGER,PRIMARY KEY (id, author_id),FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE CASCADE)");
+                sqLiteDatabase.execSQL("CREATE TABLE Posts (pid INTEGER,type TEXT,created_at INTEGER,text TEXT,image TEXT,color TEXT,share_link TEXT,object_id text,author_id INTEGER,PRIMARY KEY (pid, author_id),FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE CASCADE)");
                 sqLiteDatabase.execSQL("CREATE TABLE Connections (follower_id INTEGER,following_id INTEGER,PRIMARY KEY (follower_id, following_id),FOREIGN KEY (follower_id) REFERENCES Users(id) ON DELETE CASCADE,FOREIGN KEY (following_id) REFERENCES Users(id) ON DELETE CASCADE)");
             }
         });

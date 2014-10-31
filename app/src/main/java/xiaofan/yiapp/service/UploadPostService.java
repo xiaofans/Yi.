@@ -130,7 +130,7 @@ public class UploadPostService extends Service{
             public void success(CreateInfo createInfo, Response response) {
                 if(createInfo != null){
                     post.objectId = createInfo.objectId;
-                    post.id = post.objectId.hashCode();
+                    post.pid = post.objectId.hashCode();
                     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd\'T\'hh:ss:mm.SSS\'Z\'");
                     try {
                         post.createdAt = sf.parse(createInfo.createdAt);

@@ -40,6 +40,7 @@ public class ApiService {
     public static final String API_BASE = "https://api.parse.com/"+API_VERSION+"/";
     public static final String PARSE_APP_ID="g1QLpI6Z5egPEKEv3zZglnMcFXCuwltS5ECQ8f96";
     public static final String PARSE_APP_REST_API_KEY="zjXx0IXAxkAYzEn4v6zojytzwyXK10VakvmdHfhk";
+    public static final String PARSE_APP_MASTER_KEY = "PXl7qSGpLY4YNvxL0yKRqzcmcTGrCcDfrjZKkNxZ";
     private static Api instance;
 
     public static Api getInstance(){
@@ -52,6 +53,7 @@ public class ApiService {
                 public void intercept(RequestFacade request) {
                         request.addHeader("X-Parse-Application-Id",PARSE_APP_ID);
                         request.addHeader("X-Parse-REST-API-Key",PARSE_APP_REST_API_KEY);
+                        request.addHeader("X-Parse-Master-Key",PARSE_APP_MASTER_KEY);
                 }
             };
            instance = new RestAdapter.Builder().setRequestInterceptor(interceptor).setEndpoint(API_BASE).setLog(new AndroidLog("ApiService")).setLogLevel(RestAdapter.LogLevel.FULL).setConverter(new GsonConverter(gsonBuilder.create())).build().create(Api.class);
@@ -79,6 +81,9 @@ public class ApiService {
 
         @GET("/classes/Posts")
         public ParseBase<List<Post>>  getPosts(@Query("authorId") long authorId);
+
+        @POST("/jobs/setPostsId")
+        public void setPostId(@Body User user,Callback<Object> callback);
 
     }
 }

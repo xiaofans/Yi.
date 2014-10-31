@@ -9,19 +9,25 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import se.emilsjolander.sprinkles.CursorList;
 import se.emilsjolander.sprinkles.ManyQuery;
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.adapter.PostsFragmentAdapter;
+import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
@@ -131,6 +137,22 @@ public class TimelineActivity extends AuthenticatedActivity{
         pager.setOnPageChangeListener(pageScrollListener);
         me = QueryBuilder.me().get();
         QueryBuilder.timeline(me).getAsync(getLoaderManager(), this.onTimelineLoaded, Connection.class);
+
+      // testSetPostId();
+    }
+
+    private void testSetPostId() {
+        ApiService.getInstance().setPostId(QueryBuilder.me().get(),new Callback<Object>() {
+            @Override
+            public void success(Object o, Response response) {
+                Toast.makeText(TimelineActivity.this,"testSetPostId success!",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(TimelineActivity.this,"testSetPostId failure!",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
