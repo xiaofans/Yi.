@@ -47,7 +47,7 @@ public class Post extends Model implements Parcelable{
     public boolean hasHearted;
     @Column("heart_count")
     public  int heartCount;
-    @Column("id")
+    @Column("pid")
     @Key
     public  long pid;
     @Column("image")

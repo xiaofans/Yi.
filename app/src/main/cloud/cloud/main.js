@@ -49,6 +49,19 @@ Parse.Cloud.define("signup", function(request, response) {
 
 });
 
+Parse.Cloud.afterSave("Posts",function(request){
+      var query = new Parse.Query("Posts");
+      query.get(request.object.id, {
+          success: function(post) {
+            post.set("pid",request.object.id.hashCode());
+            post.save();
+          },
+          error: function(error) {
+            console.error("Got an error " + error.code + " : " + error.message);
+          }
+        });
+})
+
 Parse.Cloud.job("setPostsId",function(request,status){
      var query = new Parse.Query("Posts");
       query.each(function(post) {

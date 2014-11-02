@@ -3,10 +3,15 @@ package xiaofan.yiapp;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.multidex.MultiDexApplication;
 
+import com.squareup.otto.Subscribe;
+
 import se.emilsjolander.sprinkles.Migration;
 import se.emilsjolander.sprinkles.Sprinkles;
+import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.events.EventBus;
+import xiaofan.yiapp.events.LogoutEvent;
 import xiaofan.yiapp.social.SocialApi;
+import xiaofan.yiapp.utils.QueryBuilder;
 
 /**
  * Created by zhaoyu on 2014/10/9.
@@ -58,13 +63,18 @@ public class YiApp  extends MultiDexApplication{
 
 
 
-
-    public void loggedOut(){
+    @Subscribe
+    public void loggedOut(LogoutEvent logoutEvent){
         SocialApi currentSocialApi = SocialApi.getCurrent(this);
         if(currentSocialApi != null){
             currentSocialApi.logout(this);
+           SocialApi.setCurrent(this,null);
         }
 
+        User user = QueryBuilder.me().get();
+        if(user != null){
+            user.delete();
+        }
     }
 
     public static String getLogName(){

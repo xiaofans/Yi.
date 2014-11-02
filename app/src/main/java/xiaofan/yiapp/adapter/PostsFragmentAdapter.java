@@ -2,6 +2,7 @@ package xiaofan.yiapp.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import xiaofan.yiapp.fragment.UploadPostFragment;
 /**
  * Created by zhaoyu on 2014/10/19.
  */
-public class PostsFragmentAdapter extends NewFragmentStatePagerAdapter{
+public class PostsFragmentAdapter extends FragmentStatePagerAdapter {
 
    private List<Post> posts;
    public PostsFragmentAdapter(FragmentManager mFragmentManager) {
@@ -31,12 +32,6 @@ public class PostsFragmentAdapter extends NewFragmentStatePagerAdapter{
     public int getCount() {
         if(posts == null) return 1;
         return 1 + posts.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        if(position == 0) return 0;
-        return ((Post)this.posts.get(position - 1)).hashCode();
     }
 
     @Override

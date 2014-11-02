@@ -82,8 +82,11 @@ public class ApiService {
         @GET("/classes/Posts")
         public ParseBase<List<Post>>  getPosts(@Query("authorId") long authorId);
 
-        @POST("/jobs/setPostsId")
-        public void setPostId(@Body User user,Callback<Object> callback);
+        @GET("/classes/Connections")
+        public  ArrayList<User> getFollowings(@Query("followingId") long id);
 
+        public ArrayList<Post> getTimeline(long id, long id1);
+
+        public ArrayList<User> getFollowers(long id);
     }
 }

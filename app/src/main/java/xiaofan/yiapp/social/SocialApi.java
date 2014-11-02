@@ -30,7 +30,7 @@ public abstract class SocialApi {
     }
 
     public static void setCurrent(Context context,String authenticatedNetwork){
-        if(authenticatedNetwork == null) return;
+      //  if(authenticatedNetwork == null) return;
         ApplicationPreferences.get(context).setAuthenticatedNetwork(authenticatedNetwork);
     }
 

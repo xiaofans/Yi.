@@ -138,22 +138,8 @@ public class TimelineActivity extends AuthenticatedActivity{
         me = QueryBuilder.me().get();
         QueryBuilder.timeline(me).getAsync(getLoaderManager(), this.onTimelineLoaded, Connection.class);
 
-      // testSetPostId();
     }
 
-    private void testSetPostId() {
-        ApiService.getInstance().setPostId(QueryBuilder.me().get(),new Callback<Object>() {
-            @Override
-            public void success(Object o, Response response) {
-                Toast.makeText(TimelineActivity.this,"testSetPostId success!",Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(TimelineActivity.this,"testSetPostId failure!",Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
