@@ -59,6 +59,7 @@
         <service android:name=".service.PostsSyncService"/>
         <service android:name=".service.FollowersSyncService"/>
         <service android:name=".service.FollowingsSyncService"/>
+        <service android:name=".service.FollowToggleService"/>
     </application>
 
 </manifest>

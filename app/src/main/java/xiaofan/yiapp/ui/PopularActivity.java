@@ -3,6 +3,8 @@ package xiaofan.yiapp.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -50,12 +52,21 @@ public class PopularActivity extends AuthenticatedActivity {
         }
     };
 
+    private AdapterView.OnItemClickListener onUserSelected = new AdapterView.OnItemClickListener()
+    {
+        public void onItemClick(AdapterView<?> parent, View convertView, int position, long id)
+        {
+            startActivity(ProfileActivity.newIntent(PopularActivity.this, adapter.getItem(position)));
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular);
         adapter = new UserListAdapter(this);
         list.setAdapter(adapter);
+        list.setOnItemClickListener(onUserSelected);
         me = QueryBuilder.me().get();
         ApiService.getInstance().getPopular(onPopularLoaded);
     }
