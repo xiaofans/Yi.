@@ -127,6 +127,7 @@ public class TimelineActivity extends AuthenticatedActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+        Utils.fitScreenIfNeeded(this);
         if(savedInstanceState != null){
             pagerPosition = savedInstanceState.getInt("current_item");
         }

@@ -56,15 +56,10 @@ public abstract class BaseActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.register(this);
-        fitScreenIfNeeded();
+        //fitScreenIfNeeded();
     }
 
-    private void fitScreenIfNeeded() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-    }
+
 
     @Override
     protected void onDestroy() {

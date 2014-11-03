@@ -70,6 +70,7 @@ public class LoginActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        Utils.fitScreenIfNeeded(this);
         if(SocialApi.getCurrent(this) != null){
             if(QueryBuilder.me().get() != null){
                 startService(AuthenticationService.newIntent(this));

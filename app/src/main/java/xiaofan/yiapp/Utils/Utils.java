@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -85,6 +87,13 @@ public class Utils {
         }
         errorDialog = new WeakReference<AlertDialog>(new AlertDialog.Builder(context).setTitle(R.string.sorry).setMessage(message).setPositiveButton(R.string.ok,null).create());
         errorDialog.get().show();
+    }
+
+    public static void fitScreenIfNeeded(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
     }
 
 }
