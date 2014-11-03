@@ -22,4 +22,6 @@
     <string name="ok">确定</string>
     <string name="no_internetwork_connection">无网络连接</string>
     <string name="upload_fialure_message">上传失败，请重试</string>
+    <string name="num_followers">粉丝  %d</string>
+    <string name="num_followings">关注  %d</string>
 </resources>

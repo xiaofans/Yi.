@@ -3,6 +3,7 @@ package xiaofan.yiapp.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +22,7 @@ import xiaofan.yiapp.utils.Utils;
  */
 public class FollowingsSyncService extends IntentService{
 
+    private static final String TAG = "FollowingsSyncService";
     public FollowingsSyncService() {
         super("FollowingsSyncService");
     }
@@ -41,8 +43,8 @@ public class FollowingsSyncService extends IntentService{
         boolean isSyncSuccess = false;
         User me = intent.getParcelableExtra("user");
         try {
-            Transaction transaction = new Transaction();
-            ArrayList<User> followings = ApiService.getInstance().getFollowings(me.id);
+            ArrayList<User> followings = ApiService.getInstance().getFollowings(me);
+           /* Transaction transaction = new Transaction();
             Iterator<Connection> iterator = QueryBuilder.connections(me,null).get().iterator();
             while (iterator.hasNext()){
                 iterator.next().delete(transaction);
@@ -68,8 +70,9 @@ public class FollowingsSyncService extends IntentService{
                 startService(TimelineSyncService.newIntent(this));
             }else{
                 EventBus.post(new FailureEvent());
-            }
+            }*/
         }catch (RetrofitError retrofitError){
+            Log.w(TAG, retrofitError.toString());
             EventBus.post(new FailureEvent());
         }
     }

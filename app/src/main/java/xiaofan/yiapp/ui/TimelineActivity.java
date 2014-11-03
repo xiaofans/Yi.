@@ -34,6 +34,8 @@ import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.AuthenticatedActivity;
 import xiaofan.yiapp.events.UserClickEvent;
 import xiaofan.yiapp.fragment.DrawerFragment;
+import xiaofan.yiapp.service.FollowersSyncService;
+import xiaofan.yiapp.service.FollowingsSyncService;
 import xiaofan.yiapp.service.PostsSyncService;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
@@ -137,7 +139,8 @@ public class TimelineActivity extends AuthenticatedActivity{
         pager.setOnPageChangeListener(pageScrollListener);
         me = QueryBuilder.me().get();
         QueryBuilder.timeline(me).getAsync(getLoaderManager(), this.onTimelineLoaded, Connection.class);
-
+        startService(FollowingsSyncService.newIntent(this, me));
+        startService(FollowersSyncService.newIntent(this, me));
     }
 
 

@@ -18,6 +18,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import xiaofan.yiapp.api.ApiService;
+import xiaofan.yiapp.api.SignUpUser;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
@@ -106,7 +107,8 @@ public class AuthenticationService extends Service{
                         ApiService.getInstance().updateUser(userParseBase.result,userParseBase.result.objectId,new UpdateUserCallback(userParseBase.result));
                 }else{
                         userParseBase.result.uid = userParseBase.result.id;
-                        ApiService.getInstance().signUpUser(userParseBase.result,new SignupUserCallback(userParseBase.result));
+                        userParseBase.result.objectId = "undefined";
+                        ApiService.getInstance().signUpUser(convertToSignUpUser(userParseBase.result),new SignupUserCallback(userParseBase.result));
                 }
             }else{
                 EventBus.post(new FailureEvent());
@@ -125,6 +127,21 @@ public class AuthenticationService extends Service{
             }
             stopSelf();
         }
+    }
+
+    private SignUpUser convertToSignUpUser(User user) {
+        SignUpUser signUpUser = new SignUpUser();
+        if(user != null){
+            signUpUser.avatar = user.avatar;
+            signUpUser.followersCount = user.followersCount;
+            signUpUser.followingsCount = user.followingsCount;
+            signUpUser.id = user.id;
+            signUpUser.me = user.me;
+            signUpUser.isRegisterOnServer = user.isRegisterOnServer;
+            signUpUser.name = user.name;
+            signUpUser.uid = user.uid;
+        }
+        return signUpUser;
     }
 
     public class SignupUserCallback implements Callback<CreateInfo>{

@@ -23,10 +23,15 @@ Parse.Cloud.define("signup", function(request, response) {
             success:function(results){
                 var result = {};
                 result.id = resultJson.id;
-                result.isRegisterOnServer = true;
                 result.avatar = resultJson.avatar_large;
                 result.name = resultJson.name;
-                result.objectId = results[0].id;
+                if(results.length > 0){
+                 result.objectId = results[0].id;
+                 result.isRegisterOnServer = true;
+                }else{
+                    result.objectId = "";
+                    result.isRegisterOnServer = false;
+                }
                 response.success(result);
             },
             error:function(){
@@ -48,6 +53,44 @@ Parse.Cloud.define("signup", function(request, response) {
     });
 
 });
+
+// 获取关注
+Parse.Cloud.define("getFollowings",function(request,response){
+    var user_id = request.params.id;
+    var query = new Parse.Query("Connections");
+    query.equalTo("followingId",user_id);
+    query.find({
+        success:function(results){
+            response.success(results);
+        },
+        error:function(){
+            response.error("following look failed...");
+        }
+
+    });
+});
+
+// 获取粉丝
+Parse.Cloud.define("getFollowers",function(request,response){
+    var user_id = request.params.id;
+    var query = new Parse.Query("Connections");
+    query.equalTo("followerId",user_id);
+    query.find({
+        success:function(results){
+            response.success(results);
+        },
+        error:function(){
+            response.error("following look failed...");
+        }
+
+    });
+});
+
+// 获取动态
+Parse.Cloud.define("getTimeline",function(request,response){
+
+});
+
 
 Parse.Cloud.afterSave("Posts",function(request){
       var query = new Parse.Query("Posts");

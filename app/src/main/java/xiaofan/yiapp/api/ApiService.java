@@ -1,7 +1,6 @@
 package xiaofan.yiapp.api;
 
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
@@ -17,11 +16,8 @@ import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
 import retrofit.http.GET;
-import retrofit.http.Headers;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.PUT;
-import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import xiaofan.yiapp.base.CreateInfo;
@@ -71,7 +67,7 @@ public class ApiService {
         public abstract void login(@Body JSONObject jsonObject,Callback<ParseBase<User>> callback);
 
         @POST("/classes/Users")
-        public abstract void signUpUser(@Body User user,Callback<CreateInfo> callback);
+        public abstract void signUpUser(@Body SignUpUser user,Callback<CreateInfo> callback);
 
         @PUT("/classes/Users/{objectId}")
         public abstract void updateUser(@Body User user,@Path("objectId") String objectId,Callback<CreateInfo> callback);
@@ -82,11 +78,16 @@ public class ApiService {
         @GET("/classes/Posts")
         public ParseBase<List<Post>>  getPosts(@Query("authorId") long authorId);
 
-        @GET("/classes/Connections")
-        public  ArrayList<User> getFollowings(@Query("followingId") long id);
+        // ---------------------------------------------------------------------
+        @POST("/functions/getFollowings")
+        public  ArrayList<User> getFollowings(@Body User user);
 
         public ArrayList<Post> getTimeline(long id, long id1);
 
-        public ArrayList<User> getFollowers(long id);
+        @POST("/functions/getFollowers")
+        public ArrayList<User> getFollowers(@Body User user);
+
+        @GET("/classes/Users")
+        public abstract void getPopular(Callback<ParseBase<ArrayList<User>>> callback);
     }
 }

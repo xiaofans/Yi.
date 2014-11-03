@@ -21,7 +21,9 @@
         <ImageView
             android:id="@+id/avatar"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:scaleType="centerCrop" />
+            android:layout_height="fill_parent"
+            android:scaleType="centerCrop"
+            />
         <View
             android:id="@+id/overlay"
             android:background="#55000000"

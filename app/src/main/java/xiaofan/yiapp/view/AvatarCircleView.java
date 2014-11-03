@@ -62,7 +62,7 @@ public class AvatarCircleView extends View implements Target{
         setAvatar(bitmap);
     }
 
-    private void setAvatar(Bitmap bitmap) {
+    public void setAvatar(Bitmap bitmap) {
         this.avater = bitmap;
         this.roundAvatar = makeRoundAndFit(avater);
         if(this.roundAvatar != null){
@@ -79,6 +79,8 @@ public class AvatarCircleView extends View implements Target{
     }
 
     private BitmapDrawable makeRoundAndFit(Bitmap avater) {
+        if(avater == null) return null;
+        if(getMeasuredWidth() <= 0 || getMeasuredHeight() <= 0) return null;
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
         Bitmap bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
@@ -108,4 +110,7 @@ public class AvatarCircleView extends View implements Target{
     public void onPrepareLoad(Drawable drawable) {
 
     }
+
+
+
 }
