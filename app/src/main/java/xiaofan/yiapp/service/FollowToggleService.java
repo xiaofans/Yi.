@@ -5,9 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.api.entity.ToggleFollow;
+import xiaofan.yiapp.base.ParseBase;
 import xiaofan.yiapp.events.EventBus;
+import xiaofan.yiapp.events.LogoutEvent;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
 
@@ -50,9 +57,54 @@ public class FollowToggleService extends Service{
             user.followingsCount -= 1;
             user.save();
         }
+        ApiService.getInstance().setFollow(new ToggleFollow(me.id,user.id,follow),new FollowToggleCallback(me,user,follow));
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+    class FollowToggleCallback implements Callback<ParseBase<Connection>> {
+
+        private User me;
+        private User user;
+        private boolean follow;
+        public FollowToggleCallback(User me,User toggleUser,boolean follow){
+            this.me = me;
+            this.user = toggleUser;
+            this.follow = follow;
+        }
+
+        @Override
+        public void success(ParseBase<Connection> connectionParseBase, Response response) {
+            startService(TimelineSyncService.newIntent(FollowToggleService.this));
+            EventBus.post(new SuccessEvent());
+            stopSelf();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            boolean notAuth = false;
+            if(error.getResponse() != null && error.getResponse().getStatus() == 401){
+                notAuth = true;
+            }
+            fail(me,user,follow,notAuth);
+        }
+    }
+
+    private void fail(User me,User toggleUser,boolean follow,boolean notAuth){
+            if(follow){
+                new Connection(me.id,toggleUser.id).delete();
+                me.followingsCount -= 1;
+                me.save();
+            }else {
+                new Connection(me.id,toggleUser.id).save();
+                me.followingsCount += 1;
+                me.save();
+            }
+        if(notAuth){
+            EventBus.post(new LogoutEvent());
+        }
+        EventBus.post(new FailureEvent());
+    }
 
     public static class FailureEvent {}
     public static class SuccessEvent {}

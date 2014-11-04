@@ -86,9 +86,42 @@ Parse.Cloud.define("getFollowers",function(request,response){
     });
 });
 
-// 获取动态
+// 获取所有动态
 Parse.Cloud.define("getTimeline",function(request,response){
 
+});
+
+//  关注&取消关注
+Parse.Cloud.define("setFollow",function(request,response){
+    var me = request.params.me;
+    var toggleId = request.params.toggleId;
+    var follow = request.params.follow;
+    var query = new Parse.Query("Connections");
+    query.equalTo("followingId",me);
+    query.equalTo("followerId",toggleId);
+    var isSuccess = false;
+    query.get({
+            success:function(result){
+                if(result != null){
+                    result.delete();
+                }else{
+                    var connection = new Parse.Object("Connections");
+                    connection.set("followingId",me);
+                    connection.set("followerId",id);
+                    connection.save();
+                }
+               isSuccess = true;
+            },
+            error:function(){
+                isSuccess = false;
+            }
+
+        });
+        if(isSuccess){
+          response.error("setFollow  success...");
+        }else{
+         response.error("setFollow  failed...");
+        }
 });
 
 

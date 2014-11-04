@@ -20,8 +20,10 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import xiaofan.yiapp.api.entity.ToggleFollow;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
+import xiaofan.yiapp.service.FollowToggleService;
 
 /**
  * Created by zhaoyu on 2014/10/22.
@@ -89,5 +91,8 @@ public class ApiService {
 
         @GET("/classes/Users")
         public abstract void getPopular(Callback<ParseBase<ArrayList<User>>> callback);
+
+        @POST("/functions/setFollow")
+        public abstract void setFollow(@Body ToggleFollow toggleFollow, Callback<ParseBase<Connection>> callback);
     }
 }
