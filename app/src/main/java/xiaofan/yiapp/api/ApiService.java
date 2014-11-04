@@ -94,5 +94,8 @@ public class ApiService {
 
         @POST("/functions/setFollow")
         public abstract void setFollow(@Body ToggleFollow toggleFollow, Callback<ParseBase<Connection>> callback);
+
+        @POST("/functions/setCancelFollow")
+        public abstract void setCancelFollow(@Body String objectId, Callback<ParseBase<Connection>> callback);
     }
 }

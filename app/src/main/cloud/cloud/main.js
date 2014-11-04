@@ -91,7 +91,7 @@ Parse.Cloud.define("getTimeline",function(request,response){
 
 });
 
-//  关注&取消关注
+//  关注
 Parse.Cloud.define("setFollow",function(request,response){
     var me = request.params.me;
     var toggleId = request.params.toggleId;
@@ -100,28 +100,35 @@ Parse.Cloud.define("setFollow",function(request,response){
     query.equalTo("followingId",me);
     query.equalTo("followerId",toggleId);
     var isSuccess = false;
-    query.get({
-            success:function(result){
-                if(result != null){
-                    result.delete();
-                }else{
-                    var connection = new Parse.Object("Connections");
-                    connection.set("followingId",me);
-                    connection.set("followerId",id);
-                    connection.save();
-                }
-               isSuccess = true;
-            },
-            error:function(){
-                isSuccess = false;
-            }
-
-        });
-        if(isSuccess){
-          response.error("setFollow  success...");
-        }else{
-         response.error("setFollow  failed...");
+    var connection = new Parse.Object("Connections");
+    connection.set("followingId",me);
+    connection.set("followerId",toggleId);
+    connection.save(null,{
+        success:function(conn){
+            response.success(conn);
+        },
+        error:function(connection,error){
+           console.log("failed to create connection!");
         }
+    });
+});
+
+// 取消关注
+Parse.Cloud.define("setCancelFollow",function(request,response){
+    var id = request.params.objectId;
+    var query = new Parse.Query("Connections");
+    query.get(id,{
+        success:function(connection){
+            if(connection != null){
+                connection.remove();
+                response.success("true");
+            }
+        },
+        error:function(){
+         console.log("failed to cancel follow!");
+         response.success("false");
+        }
+    });
 });
 
 

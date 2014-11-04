@@ -20,7 +20,6 @@ import xiaofan.yiapp.utils.Utils;
  * Created by zhaoyu on 2014/11/2.
  */
 public class TimelineSyncService extends IntentService{
-
     public static Intent newIntent(Context context)
     {
         return new Intent(context, TimelineSyncService.class);

@@ -65,6 +65,7 @@ public class ProfileActivity extends AuthenticatedActivity{
         setContentView(R.layout.activity_profile);
 
         setUser((User)getIntent().getParcelableExtra("user"));
+        user.save();
     }
 
 

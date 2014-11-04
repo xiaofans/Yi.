@@ -18,6 +18,9 @@ public class Connection extends Model{
     @Key
     public long followingId;
 
+    @Column("object_id")
+    public String objectId;
+
     public Connection(){}
 
     public Connection(long followerId, long followingId) {

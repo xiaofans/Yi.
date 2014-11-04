@@ -52,12 +52,16 @@ public class FollowToggleService extends Service{
             new  Connection(me.id,user.id).save();
             user.followingsCount += 1;
             user.save();
+            ApiService.getInstance().setFollow(new ToggleFollow(me.id,user.id,follow),new FollowToggleCallback(me,user,follow));
         }else if(connection != null && !follow){
-            connection.delete();
             user.followingsCount -= 1;
             user.save();
+            connection = QueryBuilder.connection(me,user).get();
+            String objectId = connection.objectId;
+            ApiService.getInstance().setCancelFollow(objectId,new FollowToggleCallback(me,user,false));
+          //  connection.delete();
         }
-        ApiService.getInstance().setFollow(new ToggleFollow(me.id,user.id,follow),new FollowToggleCallback(me,user,follow));
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -75,6 +79,9 @@ public class FollowToggleService extends Service{
 
         @Override
         public void success(ParseBase<Connection> connectionParseBase, Response response) {
+            if(connectionParseBase.result != null){
+                connectionParseBase.result.save();
+            }
             startService(TimelineSyncService.newIntent(FollowToggleService.this));
             EventBus.post(new SuccessEvent());
             stopSelf();
