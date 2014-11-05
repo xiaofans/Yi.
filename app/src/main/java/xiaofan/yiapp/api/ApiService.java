@@ -21,6 +21,7 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import xiaofan.yiapp.api.entity.ToggleFollow;
+import xiaofan.yiapp.api.entity.UniversalBean;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
 import xiaofan.yiapp.service.FollowToggleService;
@@ -96,6 +97,6 @@ public class ApiService {
         public abstract void setFollow(@Body ToggleFollow toggleFollow, Callback<ParseBase<Connection>> callback);
 
         @POST("/functions/setCancelFollow")
-        public abstract void setCancelFollow(@Body String objectId, Callback<ParseBase<Connection>> callback);
+        public abstract void setCancelFollow(@Body UniversalBean universalBean,  Callback<ParseBase<Boolean>> callback);
     }
 }

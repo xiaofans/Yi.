@@ -27,4 +27,10 @@ public class Connection extends Model{
         this.followerId = followerId;
         this.followingId = followingId;
     }
+
+    public Connection(long followerId, long followingId,String objectId) {
+        this.followerId = followerId;
+        this.followingId = followingId;
+        this.objectId = objectId;
+    }
 }

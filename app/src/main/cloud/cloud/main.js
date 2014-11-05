@@ -96,13 +96,10 @@ Parse.Cloud.define("setFollow",function(request,response){
     var me = request.params.me;
     var toggleId = request.params.toggleId;
     var follow = request.params.follow;
-    var query = new Parse.Query("Connections");
-    query.equalTo("followingId",me);
-    query.equalTo("followerId",toggleId);
     var isSuccess = false;
     var connection = new Parse.Object("Connections");
-    connection.set("followingId",me);
-    connection.set("followerId",toggleId);
+    connection.set("followerId",me);
+    connection.set("followingId",toggleId);
     connection.save(null,{
         success:function(conn){
             response.success(conn);
@@ -120,13 +117,20 @@ Parse.Cloud.define("setCancelFollow",function(request,response){
     query.get(id,{
         success:function(connection){
             if(connection != null){
-                connection.remove();
-                response.success("true");
+                connection.destroy({
+                    success:function(conn){
+                      response.success(true);
+                    },
+                    error:function(conn,erro){
+                         response.success(false);
+                    }
+                });
+
             }
         },
         error:function(){
          console.log("failed to cancel follow!");
-         response.success("false");
+         response.error(false);
         }
     });
 });
