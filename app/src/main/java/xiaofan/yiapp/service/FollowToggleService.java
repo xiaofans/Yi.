@@ -51,9 +51,9 @@ public class FollowToggleService extends Service{
         User me = QueryBuilder.me().get();
         User user = intent.getParcelableExtra("user");
         boolean follow = intent.getBooleanExtra("follow", false);
-        Connection connection = null;// QueryBuilder.connection(me,user).get();
-        if(/*connection == null && */follow){
-            //new  Connection(me.id,user.id).save();
+        Connection connection = QueryBuilder.connection(me,user).get();
+        if(connection == null && follow){
+            new Connection(me.id,user.id).save();
             user.followingsCount += 1;
             user.save();
             ApiService.getInstance().setFollow(new ToggleFollow(me.id,user.id,follow,user.objectId),new FollowToggleCallback(me,user,follow));
