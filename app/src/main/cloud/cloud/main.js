@@ -64,6 +64,8 @@ Parse.Cloud.define("getFollowings",function(request,response){
     query.equalTo("followingId",user_id);
     query.find({
         success:function(results){
+            var users = [];
+            var query = new Parse.Query("Users");
             response.success(results);
         },
         error:function(){
@@ -72,6 +74,7 @@ Parse.Cloud.define("getFollowings",function(request,response){
 
     });
 });
+
 
 // 获取粉丝
 Parse.Cloud.define("getFollowers",function(request,response){
