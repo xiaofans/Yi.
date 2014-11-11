@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "xiaofan.yiapp"
@@ -17,24 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-    }
-
-    dexOptions {
-        preDexLibraries = false
-    }
-}
-
-afterEvaluate {
-    tasks.matching {
-        it.name.startsWith('dex')
-    }.each { dx ->
-        if (dx.additionalParameters == null) {
-            dx.additionalParameters = []
-        }
-        dx.additionalParameters += '--multi-dex' // enable multidex
-
-        // optional
-        // dx.additionalParameters += "--main-dex-list=$projectDir/<filename>".toString() // enable the main-dex-list
     }
 }
 

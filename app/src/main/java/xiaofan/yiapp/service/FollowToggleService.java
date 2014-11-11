@@ -51,19 +51,19 @@ public class FollowToggleService extends Service{
         User me = QueryBuilder.me().get();
         User user = intent.getParcelableExtra("user");
         boolean follow = intent.getBooleanExtra("follow", false);
-        Connection connection = QueryBuilder.connection(me,user).get();
-        if(connection == null && follow){
+        Connection connection = null;// QueryBuilder.connection(me,user).get();
+        if(/*connection == null && */follow){
             //new  Connection(me.id,user.id).save();
             user.followingsCount += 1;
             user.save();
-            ApiService.getInstance().setFollow(new ToggleFollow(me.id,user.id,follow),new FollowToggleCallback(me,user,follow));
+            ApiService.getInstance().setFollow(new ToggleFollow(me.id,user.id,follow,user.objectId),new FollowToggleCallback(me,user,follow));
         }else if(connection != null && !follow){
             user.followingsCount -= 1;
             user.save();
             connection = QueryBuilder.connection(me,user).get();
             String objectId = connection.objectId;
             Log.w(TAG,"objectId is:" + objectId);
-            ApiService.getInstance().setCancelFollow(new UniversalBean(objectId), new CancelFollowToggleCallback(me, user, false,objectId));
+            ApiService.getInstance().setCancelFollow(new UniversalBean(objectId,user.objectId), new CancelFollowToggleCallback(me, user, false,objectId));
             connection.deleteAsync(new Model.OnDeletedCallback() {
                 @Override
                 public void onDeleted() {

@@ -5,8 +5,11 @@ package xiaofan.yiapp.api.entity;
  */
 public class UniversalBean {
     public String objectId;
+    public String userId;
 
-    public UniversalBean(String objectId) {
+    public UniversalBean(String objectId, String userId) {
         this.objectId = objectId;
+        this.userId = userId;
     }
+
 }

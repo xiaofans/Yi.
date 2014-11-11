@@ -21,6 +21,7 @@ Parse.Cloud.define("signup", function(request, response) {
         query.equalTo("uid", resultJson.id);
         query.find({
             success:function(results){
+                console.log("sign up results is:" + results[0].followingsCount);
                 var result = {};
                 result.id = resultJson.id;
                 result.avatar = resultJson.avatar_large;
@@ -28,6 +29,8 @@ Parse.Cloud.define("signup", function(request, response) {
                 if(results.length > 0){
                  result.objectId = results[0].id;
                  result.isRegisterOnServer = true;
+                 result.followersCount = results[0].get("followersCount");
+                 result.followingsCount = results[0].get("followingsCount");
                 }else{
                     result.objectId = "";
                     result.isRegisterOnServer = false;
@@ -106,22 +109,63 @@ Parse.Cloud.define("setFollow",function(request,response){
         },
         error:function(connection,error){
            console.log("failed to create connection!");
+            response.error(error);
         }
     });
 });
+
+Parse.Cloud.afterSave("Connections", function(request, response) {
+        var query = new Parse.Query("Users");
+        query.equalTo("uid",request.object.get("followerId"));
+        query.find({
+            success:function(results){
+            console.log("connection aftersave:" + results);
+                 if(results != null && results.length > 0){
+                    console.log(results);
+                    var user = results[0];
+                    user.set("followingsCount",user.get("followingsCount") + 1);
+                    user.save();
+                 }
+            },
+            error:function(){
+                response.error("following look failed...");
+            }
+
+        });
+
+          var query2 = new Parse.Query("Users");
+           query2.equalTo("uid",request.object.get("followingId"));
+           query2.find({
+                success:function(results){
+                console.log("connection aftersave:" + results);
+                     if(results != null && results.length > 0){
+                        console.log(results);
+                        var user = results[0];
+                        user.set("followersCount",user.get("followersCount") + 1);
+                        user.save();
+                     }
+                },
+                error:function(){
+                    response.error("following look failed...");
+                }
+
+            });
+});
+
 
 // 取消关注
 Parse.Cloud.define("setCancelFollow",function(request,response){
     var id = request.params.objectId;
     var query = new Parse.Query("Connections");
+    var userId = request.params.userId;
     query.get(id,{
         success:function(connection){
             if(connection != null){
                 connection.destroy({
                     success:function(conn){
-                      response.success(true);
+                        response.success(true);
                     },
-                    error:function(conn,erro){
+                    error:function(conn,error){
                          response.success(false);
                     }
                 });
@@ -133,6 +177,43 @@ Parse.Cloud.define("setCancelFollow",function(request,response){
          response.error(false);
         }
     });
+});
+
+Parse.Cloud.afterDelete("Connections", function(request, response) {
+        var query = new Parse.Query("Users");
+        query.equalTo("uid",request.object.get("followerId"));
+        query.find({
+            success:function(results){
+            console.log("connection aftersave:" + results);
+                 if(results != null && results.length > 0){
+                    console.log(results);
+                    var user = results[0];
+                    user.set("followingsCount",user.get("followingsCount") - 1);
+                    user.save();
+                 }
+            },
+            error:function(){
+                response.error("following look failed...");
+            }
+
+        });
+          var query2 = new Parse.Query("Users");
+           query2.equalTo("uid",request.object.get("followingId"));
+           query2.find({
+                success:function(results){
+                console.log("connection aftersave:" + results);
+                     if(results != null && results.length > 0){
+                        console.log(results);
+                        var user = results[0];
+                        user.set("followersCount",user.get("followersCount") - 1);
+                        user.save();
+                     }
+                },
+                error:function(){
+                    response.error("following look failed...");
+                }
+
+            });
 });
 
 
