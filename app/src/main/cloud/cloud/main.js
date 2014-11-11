@@ -61,16 +61,28 @@ Parse.Cloud.define("signup", function(request, response) {
 Parse.Cloud.define("getFollowings",function(request,response){
     var user_id = request.params.id;
     var query = new Parse.Query("Connections");
-    query.equalTo("followingId",user_id);
-    query.find({
-        success:function(results){
-            response.success(results);
-        },
-        error:function(){
-            response.error("following look failed...");
-        }
+    query.equalTo("followerId",user_id);
+    query.find().then(function(results){
+                var id = [];
+                for(var i = 0; i < results.length;i ++){
+                 var conn = results[i];
+                    var followerId = conn.get("followingId");
+                    id.push(followerId);
+                }
 
-    });
+                 var query2 = new Parse.Query("Users");
+                  query2.containedIn("uid",followerId);
+                  return query2.find();
+    }).then(function(results){
+        var users = [];
+         for(var j = 0; j < results.length; j ++){
+                users.push(results[j]);
+         }
+         response.success(users);
+    },
+      function(error) {
+            response.error("movie lookup failed");
+      });
 });
 
 // 获取粉丝
