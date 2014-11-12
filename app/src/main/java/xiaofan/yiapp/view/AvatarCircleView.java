@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
@@ -24,6 +25,7 @@ import com.squareup.picasso.Target;
  */
 public class AvatarCircleView extends View implements Target{
 
+    private static String TAG = AvatarCircleView.class.getSimpleName();
     private Bitmap avater;
     private float density = getResources().getDisplayMetrics().density;
     private BitmapDrawable roundAvatar;
@@ -45,7 +47,7 @@ public class AvatarCircleView extends View implements Target{
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if(this.avater != null){
-            makeRoundAndFit(avater);
+            this.roundAvatar = makeRoundAndFit(avater);
         }
     }
 
@@ -59,10 +61,12 @@ public class AvatarCircleView extends View implements Target{
 
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+        Log.w(TAG,"-- onBitmapLoaded --");
         setAvatar(bitmap);
     }
 
     public void setAvatar(Bitmap bitmap) {
+        if(bitmap == null) return;
         this.avater = bitmap;
         this.roundAvatar = makeRoundAndFit(avater);
         if(this.roundAvatar != null){

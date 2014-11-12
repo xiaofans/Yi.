@@ -20,6 +20,7 @@ import xiaofan.yiapp.adapter.UserListAdapter;
 import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.AuthenticatedActivity;
+import xiaofan.yiapp.service.FollowToggleService;
 import xiaofan.yiapp.service.FollowingsSyncService;
 import xiaofan.yiapp.utils.QueryBuilder;
 
@@ -63,6 +64,14 @@ public class FollowingsListActivity extends AuthenticatedActivity{
             startActivity(ProfileActivity.newIntent(FollowingsListActivity.this,adapter.getItem(position)));
         }
     };
+
+    private UserListAdapter.OnUserFollowToggledListener onUserFollowToggledListener = new UserListAdapter.OnUserFollowToggledListener()
+    {
+        @Override
+        public void onUserFollowToggled(User user, boolean follow) {
+            startService(FollowToggleService.newIntent(FollowingsListActivity.this.getBaseContext(), user, follow));
+        }
+    };
     public static Intent newIntent(Context context, User user)
     {
         Intent intent = new Intent(context, FollowingsListActivity.class);
@@ -76,6 +85,7 @@ public class FollowingsListActivity extends AuthenticatedActivity{
         setContentView(R.layout.activity_following);
         user = getIntent().getParcelableExtra("user");
         adapter = new UserListAdapter(this);
+        adapter.setOnUserFollowToggledListener(onUserFollowToggledListener);
         list.setAdapter(adapter);
         emptyView.setText(getString(R.string._fetch_following_tip));
         list.setEmptyView(emptyView);

@@ -225,8 +225,8 @@ Parse.Cloud.define("setCancelFollow",function(request,response){
             }
         },
         error:function(){
-         console.log("failed to cancel follow!");
-         response.error(false);
+             console.log("failed to cancel follow!");
+             response.error(false);
         }
     });
 });

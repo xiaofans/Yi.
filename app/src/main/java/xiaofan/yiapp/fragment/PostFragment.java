@@ -16,6 +16,8 @@ import xiaofan.yiapp.R;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.BaseFragment;
+import xiaofan.yiapp.events.EventBus;
+import xiaofan.yiapp.events.UserClickEvent;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.view.AvatarCircleView;
 
@@ -104,7 +106,7 @@ public abstract class PostFragment extends BaseFragment{
 
     @OnClick(R.id.avatar)
     public void onAvatarClicked(){
-
+        EventBus.post(new UserClickEvent(this.author));
     }
 
     @OnClick(R.id.comment_post)

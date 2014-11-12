@@ -32,11 +32,11 @@ public class ImagePostFragment extends PostFragment{
         View view = inflater.inflate(R.layout.fragment_image_post,container,false);
         ButterKnife.inject(this, view);
         Utils.addSystemUIPadding(getActivity(), this.postView);
-        content.setText(this.post.text);
-        commentCounter.setText("" + this.post.commentCount);
-        heartCounter.setText("" + this.post.heartCount);
+        content.setText(post.text);
+        commentCounter.setText("" + post.commentCount);
+        heartCounter.setText("" + post.heartCount);
         postView.setShouldAnimateBackgroundChange(true);
-        Picasso.with(getActivity()).load(this.post.image).noFade().into(postView);
+        Picasso.with(getActivity()).load(post.image).noFade().into(postView);
         if(showAuthor){
             Picasso.with(getActivity()).load(author.avatar).into(avatar);
         }

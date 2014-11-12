@@ -43,10 +43,11 @@
                 />
         </LinearLayout>
         <xiaofan.yiapp.view.AvatarCircleView
-            android:layout_gravity="top|right|center"
             android:id="@+id/avatar"
+            android:layout_gravity="top|right|center"
             android:layout_width="44.0dip"
-            android:layout_height="44.0dip" />
+            android:layout_height="44.0dip"
+            />
         <TextView
             android:textSize="24.0sp"
             android:textColor="@android:color/white"

@@ -26,6 +26,17 @@ public class UserListAdapter extends RecycleAdapter{
     private final  Context context;
     private List<User> followings = new ArrayList<User>();
     private List<User> users;
+    private OnUserFollowToggledListener onUserFollowToggledListener;
+    private View.OnClickListener onFollowClicked = new View.OnClickListener()
+    {
+        public void onClick(View view)
+        {
+            ToggleButton toggleButton = (ToggleButton)view;
+            if (onUserFollowToggledListener != null) {
+                onUserFollowToggledListener.onUserFollowToggled((User)toggleButton.getTag(), toggleButton.isChecked());
+            }
+        }
+    };
     public UserListAdapter(Context context) {
         super(context);
         this.context = context;
@@ -44,6 +55,8 @@ public class UserListAdapter extends RecycleAdapter{
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.userName.setText(user.name);
         viewHolder.followToggle.setChecked(followings.contains(user));
+        viewHolder.followToggle.setOnClickListener(onFollowClicked);
+        viewHolder.followToggle.setTag(user);
         if (!user.avatar.equals(viewHolder.avatar.getTag()))
         {
             viewHolder.avatar.setAvatar(null);
@@ -91,5 +104,14 @@ public class UserListAdapter extends RecycleAdapter{
     public void setFollowings(List<User> followings) {
         this.followings = followings;
         notifyDataSetChanged();
+    }
+
+    public void setOnUserFollowToggledListener(OnUserFollowToggledListener onUserFollowToggledListener) {
+        this.onUserFollowToggledListener = onUserFollowToggledListener;
+    }
+
+    public static abstract interface OnUserFollowToggledListener
+    {
+        public abstract void onUserFollowToggled(User user, boolean follow);
     }
 }

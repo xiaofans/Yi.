@@ -54,6 +54,7 @@ public class FollowersSyncService extends IntentService{
             Iterator<User> iterator2 = users.iterator();
             while (iterator2.hasNext()){
                 User user2 = iterator2.next();
+                user2.id = user2.uid;
                 if(user2.save()){
                     new Connection(user2.id,user.id).save(transaction);
                 }
