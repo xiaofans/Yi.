@@ -36,7 +36,10 @@ public class ImagePostFragment extends PostFragment{
         commentCounter.setText("" + this.post.commentCount);
         heartCounter.setText("" + this.post.heartCount);
         postView.setShouldAnimateBackgroundChange(true);
-        Picasso.with(getActivity()).load(this.post.image).noFade().into(this.postView);
+        Picasso.with(getActivity()).load(this.post.image).noFade().into(postView);
+        if(showAuthor){
+            Picasso.with(getActivity()).load(author.avatar).into(avatar);
+        }
         return view;
     }
 

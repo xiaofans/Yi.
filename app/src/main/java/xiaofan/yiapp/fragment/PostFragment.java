@@ -16,6 +16,7 @@ import xiaofan.yiapp.R;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.BaseFragment;
+import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.view.AvatarCircleView;
 
 /**
@@ -45,6 +46,7 @@ public abstract class PostFragment extends BaseFragment{
     protected Post post;
     protected boolean showAuthor;
     protected User me;
+    protected User author;
     static {
         Property xProperty = View.SCALE_X;
         Keyframe[] xArrayKeyframe = new Keyframe[3];
@@ -93,8 +95,11 @@ public abstract class PostFragment extends BaseFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.post = ((Post)getArguments().getParcelable("post"));
-        this.showAuthor = getArguments().getBoolean("show_author", true);
+        post = ((Post)getArguments().getParcelable("post"));
+        showAuthor = getArguments().getBoolean("show_author", true);
+        if(showAuthor){
+            author = QueryBuilder.user(post.authorId).get();
+        }
     }
 
     @OnClick(R.id.avatar)

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 
 import butterknife.ButterKnife;
@@ -33,6 +35,9 @@ public class TextPostFragment extends PostFragment{
         content.setText(post.text);
         commentCounter.setText("" + post.commentCount);
         heartCounter.setText("" + post.heartCount);
+        if(showAuthor){
+            Picasso.with(getActivity()).load(author.avatar).noFade().into(this.avatar);
+        }
         return view;
     }
 
