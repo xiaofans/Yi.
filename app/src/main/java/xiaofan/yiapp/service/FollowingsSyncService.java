@@ -55,6 +55,7 @@ public class FollowingsSyncService extends IntentService{
             Iterator<User> iterator2 = followings.iterator();
             while (iterator2.hasNext()){
                 User user = iterator2.next();
+                user.id = user.uid;
                 if(user.save(transaction)){
                     if(new Connection(me.id,user.id).save(transaction)){
                         isSyncSuccess = true;

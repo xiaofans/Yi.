@@ -59,11 +59,11 @@ public class UploadPostService extends Service{
             stopSelf();
             return START_FLAG_REDELIVERY;
         }
-        final  PostTemplate postTemplate = intent.getParcelableExtra("post");
-        if(postTemplate == null){
+        if(intent == null){
             stopSelf();
             return START_FLAG_REDELIVERY;
         }
+        final  PostTemplate postTemplate = intent.getParcelableExtra("post");
         SocialApi.getCurrent(this).getSocialAuth(this,new LoginCallback() {
             @Override
             public void failure(LoginError loginError) {

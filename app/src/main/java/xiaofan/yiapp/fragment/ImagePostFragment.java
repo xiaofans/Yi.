@@ -1,7 +1,9 @@
 package xiaofan.yiapp.fragment;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,9 @@ import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
  */
 public class ImagePostFragment extends PostFragment{
 
+    private static final String TAG = ImagePostFragment.class.getSimpleName();
     public static final String EXTRA_ANIMATE_NEW_BACKGROUND = "extra_animate_new_background";
+
     @InjectView(R.id.post)
     PanningBackgroundFrameLayout postView;
 
@@ -38,6 +42,7 @@ public class ImagePostFragment extends PostFragment{
 
     @Override
     public boolean onBackPressed() {
+        Log.w(TAG,"--- onBackPressed invoked ---");
         if (postView.isZoomedOut())
         {
             postView.toggleZoomedOut();

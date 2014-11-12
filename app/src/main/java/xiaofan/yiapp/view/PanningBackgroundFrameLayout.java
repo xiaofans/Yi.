@@ -74,7 +74,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
 
    private static final String TAG = PanningBackgroundFrameLayout.class.getSimpleName();
    private boolean isPanningEnabled;
-   private boolean canPan;
+   private boolean canPan = true;
    private boolean isAnimatingBackground;
    private BitmapDrawable background;
    private int backgroundColor = -13421773;
@@ -230,7 +230,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     public void setPanningEnabled(boolean isPanningEnabled) {
         this.isPanningEnabled = isPanningEnabled;
         removeCallbacks(updateOffset);
-        if(isPanningEnabled){
+        if(isPanningEnabled && canPan){
             lastPan = System.currentTimeMillis();
             postDelayed(updateOffset,16L);
         }

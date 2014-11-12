@@ -14,7 +14,7 @@ import xiaofan.yiapp.fragment.UploadPostFragment;
  * Created by zhaoyu on 2014/10/19.
  */
 
-public class PostsFragmentAdapter extends FragmentStatePagerAdapter {
+public class PostsFragmentAdapter extends NewFragmentStatePagerAdapter {
    private List<Post> posts;
    public PostsFragmentAdapter(FragmentManager mFragmentManager) {
         super(mFragmentManager);

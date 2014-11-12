@@ -124,8 +124,5 @@ public abstract class PostFragment extends BaseFragment{
     @OnClick(R.id.overflow)
     public void onOverflowClicked(View view)
     {
-
     }
-
-
 }
