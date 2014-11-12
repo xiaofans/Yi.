@@ -24,4 +24,7 @@
     <string name="upload_fialure_message">上传失败，请重试</string>
     <string name="num_followers">粉丝  %d</string>
     <string name="num_followings">关注  %d</string>
+    <string name="_fetch_followers_tip">获取粉丝</string>
+    <string name="_fetch_following_tip">获取关注</string>
+    <string name="fetch_popular_tip">获取受欢迎的</string>
 </resources>

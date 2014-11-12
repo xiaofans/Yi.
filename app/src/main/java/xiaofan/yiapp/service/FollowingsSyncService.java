@@ -13,6 +13,7 @@ import se.emilsjolander.sprinkles.Transaction;
 import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.base.ParseBase;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
@@ -43,8 +44,9 @@ public class FollowingsSyncService extends IntentService{
         boolean isSyncSuccess = false;
         User me = intent.getParcelableExtra("user");
         try {
-            ArrayList<User> followings = ApiService.getInstance().getFollowings(me);
-           /* Transaction transaction = new Transaction();
+            ParseBase<ArrayList<User>> result = ApiService.getInstance().getFollowings(me);
+            ArrayList<User> followings = result.result == null ? new ArrayList<User>() : result.result;
+            Transaction transaction = new Transaction();
             Iterator<Connection> iterator = QueryBuilder.connections(me,null).get().iterator();
             while (iterator.hasNext()){
                 iterator.next().delete(transaction);
@@ -54,7 +56,7 @@ public class FollowingsSyncService extends IntentService{
             while (iterator2.hasNext()){
                 User user = iterator2.next();
                 if(user.save(transaction)){
-                    if(!new Connection(me.id,user.id).save(transaction)){
+                    if(new Connection(me.id,user.id).save(transaction)){
                         isSyncSuccess = true;
                      }else{
                         isSyncSuccess = false;
@@ -70,7 +72,7 @@ public class FollowingsSyncService extends IntentService{
                 startService(TimelineSyncService.newIntent(this));
             }else{
                 EventBus.post(new FailureEvent());
-            }*/
+            }
         }catch (RetrofitError retrofitError){
             Log.w(TAG, retrofitError.toString());
             EventBus.post(new FailureEvent());

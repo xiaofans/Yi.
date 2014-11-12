@@ -13,6 +13,7 @@ import se.emilsjolander.sprinkles.Transaction;
 import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.base.ParseBase;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
@@ -41,12 +42,11 @@ public class FollowersSyncService extends IntentService{
             EventBus.post(new FailureEvent());
             return;
         }
-
         try {
             User user = intent.getParcelableExtra("user");
-
-            ArrayList<User> users = ApiService.getInstance().getFollowers(user);
-           /* Transaction transaction = new Transaction();
+           ParseBase<ArrayList<User>> result = ApiService.getInstance().getFollowers(user);
+           ArrayList<User> users = result.result == null ? new ArrayList<User>() : result.result;
+           Transaction transaction = new Transaction();
             Iterator<Connection> iterator = QueryBuilder.connections(null,user).get().iterator();
              while (iterator.hasNext()){
                 iterator.next().delete(transaction);
@@ -60,7 +60,7 @@ public class FollowersSyncService extends IntentService{
             }
             transaction.setSuccessful(true);
             transaction.finish();
-            EventBus.post(new SuccessEvent());*/
+            EventBus.post(new SuccessEvent());
         }catch (RetrofitError retrofitError){
             Log.w(TAG,retrofitError.toString());
             EventBus.post(new FailureEvent());

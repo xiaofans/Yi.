@@ -1,6 +1,5 @@
 package xiaofan.yiapp.fragment;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import xiaofan.yiapp.view.PanningBackgroundFrameLayout;
  * Created by zhaoyu on 2014/10/19.
  */
 public class ImagePostFragment extends PostFragment{
+
     public static final String EXTRA_ANIMATE_NEW_BACKGROUND = "extra_animate_new_background";
     @InjectView(R.id.post)
     PanningBackgroundFrameLayout postView;
@@ -52,7 +52,6 @@ public class ImagePostFragment extends PostFragment{
         this.postView.setPanningEnabled(false);
         this.postView.setClickToZoomEnabled(false);
     }
-
     public void onResume()
     {
         super.onResume();

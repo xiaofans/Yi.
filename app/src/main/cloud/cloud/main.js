@@ -57,22 +57,60 @@ Parse.Cloud.define("signup", function(request, response) {
 
 });
 
+// 获取post
+Parse.Cloud.define("timeline",function(request,response){
+    var meId = request.params.meId;
+    var userId = request.params.userId;
+     var query = new Parse.Query("Connections");
+        query.equalTo("followerId",meId);
+        query.find().then(function(results){
+            var id = [];
+            for(var i = 0; i < results.length;i ++){
+             var conn = results[i];
+                var followerId = conn.get("followingId");
+                id.push(followerId);
+            }
+          id.push(meId);
+         var query2 = new Parse.Query("Posts");
+          query2.containedIn("authorId",id);
+          return query2.find();
+        }).then(function(results){
+            var posts = [];
+             for(var j = 0; j < results.length; j ++){
+                    posts.push(results[j]);
+             }
+             response.success(posts);
+        },
+          function(error) {
+                response.error("movie lookup failed" + JSON.stringify(error));
+          });
+});
+
 // 获取关注
 Parse.Cloud.define("getFollowings",function(request,response){
     var user_id = request.params.id;
     var query = new Parse.Query("Connections");
-    query.equalTo("followingId",user_id);
-    query.find({
-        success:function(results){
-            var users = [];
-            var query = new Parse.Query("Users");
-            response.success(results);
-        },
-        error:function(){
-            response.error("following look failed...");
+    query.equalTo("followerId",user_id);
+    query.find().then(function(results){
+        var id = [];
+        for(var i = 0; i < results.length;i ++){
+         var conn = results[i];
+            var followerId = conn.get("followingId");
+            id.push(followerId);
         }
-
-    });
+     var query2 = new Parse.Query("Users");
+      query2.containedIn("uid",id);
+      return query2.find();
+    }).then(function(results){
+        var users = [];
+         for(var j = 0; j < results.length; j ++){
+                users.push(results[j]);
+         }
+         response.success(users);
+    },
+      function(error) {
+            response.error("movie lookup failed" + JSON.stringify(error));
+      });
 });
 
 
@@ -80,16 +118,27 @@ Parse.Cloud.define("getFollowings",function(request,response){
 Parse.Cloud.define("getFollowers",function(request,response){
     var user_id = request.params.id;
     var query = new Parse.Query("Connections");
-    query.equalTo("followerId",user_id);
-    query.find({
-        success:function(results){
-            response.success(results);
-        },
-        error:function(){
-            response.error("following look failed...");
+    query.equalTo("followingId",user_id);
+    query.find().then(function(results){
+        var id = [];
+        for(var i = 0; i < results.length;i ++){
+         var conn = results[i];
+            var followerId = conn.get("followerId");
+            id.push(followerId);
         }
-
-    });
+     var query2 = new Parse.Query("Users");
+      query2.containedIn("uid",id);
+      return query2.find();
+    }).then(function(results){
+        var users = [];
+         for(var j = 0; j < results.length; j ++){
+                users.push(results[j]);
+         }
+         response.success(users);
+    },
+      function(error) {
+            response.error("movie lookup failed" + JSON.stringify(error));
+      });
 });
 
 // 获取所有动态

@@ -54,12 +54,15 @@
             android:parentActivityName=".ui.TimelineActivity"
             />
         <activity android:theme="@style/ProfileTheme" android:name=".ui.ProfileActivity" />
+        <activity android:label="@string/following" android:name=".ui.FollowingsListActivity" android:parentActivityName=".ui.TimelineActivity" />
+        <activity android:label="@string/followers" android:name=".ui.FollowersListActivity" android:parentActivityName=".ui.TimelineActivity" />
         <service android:name=".service.AuthenticationService"/>
         <service android:name=".service.UploadPostService"/>
         <service android:name=".service.PostsSyncService"/>
         <service android:name=".service.FollowersSyncService"/>
         <service android:name=".service.FollowingsSyncService"/>
         <service android:name=".service.FollowToggleService"/>
+        <service android:name=".service.TimelineSyncService"/>
     </application>
 
 </manifest>

@@ -20,6 +20,7 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import xiaofan.yiapp.api.entity.Timeline;
 import xiaofan.yiapp.api.entity.ToggleFollow;
 import xiaofan.yiapp.api.entity.UniversalBean;
 import xiaofan.yiapp.base.CreateInfo;
@@ -83,12 +84,13 @@ public class ApiService {
 
         // ---------------------------------------------------------------------
         @POST("/functions/getFollowings")
-        public  ArrayList<User> getFollowings(@Body User user);
+        public  ParseBase<ArrayList<User>> getFollowings(@Body User user);
 
-        public ArrayList<Post> getTimeline(long id, long id1);
+        @POST("/functions/timeline")
+        public ParseBase<ArrayList<Post>> getTimeline(@Body Timeline timeline);
 
         @POST("/functions/getFollowers")
-        public ArrayList<User> getFollowers(@Body User user);
+        public ParseBase<ArrayList<User>>  getFollowers(@Body User user);
 
         @GET("/classes/Users")
         public abstract void getPopular(Callback<ParseBase<ArrayList<User>>> callback);

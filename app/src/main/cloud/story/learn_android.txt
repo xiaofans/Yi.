@@ -1,0 +1,18 @@
+Android 在java自带的数据结构上增加了一些自身的实现，一般是为了解决性能问题
+LruCache
+SparseArray
+SparseBooleanArray
+SparseIntArray
+Pair
+--
+熟悉java.util android.util工具包
+java.util.current
+--
+ANR 输入事件5s BroadcastReceiver 10s
+--
+onCreate
+onStart
+onResume
+--
+ViewStub推迟对象创建
+优化的基本原则是保持程序的持续响应，让主线程尽可能快的完成任务

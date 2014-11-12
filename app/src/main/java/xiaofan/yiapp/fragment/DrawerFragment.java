@@ -55,12 +55,12 @@ public class DrawerFragment extends BaseFragment{
         return drawerView;
     }
 
-    @OnClick(R.id.followers_count)
+    @OnClick(R.id.followers)
     public void followers(){
         EventBus.post(new FollowersClickedEvent());
     }
 
-    @OnClick(R.id.following_count)
+    @OnClick(R.id.following)
     public void following(){
         EventBus.post(new FollowingClickedEvent());
     }

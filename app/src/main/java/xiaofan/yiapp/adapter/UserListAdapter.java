@@ -43,6 +43,7 @@ public class UserListAdapter extends RecycleAdapter{
         User user = users.get(position);
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.userName.setText(user.name);
+        viewHolder.followToggle.setChecked(followings.contains(user));
         if (!user.avatar.equals(viewHolder.avatar.getTag()))
         {
             viewHolder.avatar.setAvatar(null);
@@ -84,6 +85,11 @@ public class UserListAdapter extends RecycleAdapter{
 
     public void setUsers(List<User> users) {
         this.users = users;
+        notifyDataSetChanged();
+    }
+
+    public void setFollowings(List<User> followings) {
+        this.followings = followings;
         notifyDataSetChanged();
     }
 }

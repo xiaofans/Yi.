@@ -12,6 +12,8 @@ import se.emilsjolander.sprinkles.Transaction;
 import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.api.entity.Timeline;
+import xiaofan.yiapp.base.ParseBase;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
@@ -38,7 +40,8 @@ public class TimelineSyncService extends IntentService{
         try {
             User me = QueryBuilder.me().get();
             Transaction transaction =  new Transaction();
-            ArrayList<Post> posts = ApiService.getInstance().getTimeline(me.id, me.id);
+            ParseBase<ArrayList<Post>> result = ApiService.getInstance().getTimeline(new Timeline(me.id,me.id));
+            ArrayList<Post> posts = result.result == null ? new ArrayList<Post>() : result.result;
             Iterator<Post> iterator = posts.iterator();
             if(!iterator.hasNext()) return;
             while (iterator.hasNext()){

@@ -192,4 +192,26 @@ public class TimelineActivity extends AuthenticatedActivity{
     {
         startActivity(ProfileActivity.newIntent(this, userClickEvent.user));
     }
+
+    @Subscribe
+    public void followingSelected(DrawerFragment.FollowingClickedEvent followingClickedEvent){
+        closeDrawerAndDo(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(FollowingsListActivity.newIntent(TimelineActivity.this,me));
+            }
+        });
+
+    }
+
+    @Subscribe
+    public void followerSelected(DrawerFragment.FollowersClickedEvent followersClickedEvent){
+        closeDrawerAndDo(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(FollowersListActivity.newIntent(TimelineActivity.this,me));
+            }
+        });
+
+    }
 }

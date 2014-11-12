@@ -14,12 +14,16 @@ import butterknife.InjectView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import se.emilsjolander.sprinkles.CursorList;
+import se.emilsjolander.sprinkles.ManyQuery;
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.adapter.UserListAdapter;
 import xiaofan.yiapp.api.ApiService;
+import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.AuthenticatedActivity;
 import xiaofan.yiapp.base.ParseBase;
+import xiaofan.yiapp.service.FollowingsSyncService;
 import xiaofan.yiapp.utils.QueryBuilder;
 
 /**
@@ -39,6 +43,16 @@ public class PopularActivity extends AuthenticatedActivity {
     ListView list;
 
     private User me;
+    private ManyQuery.ResultHandler<User> onFollowingsLoaded = new ManyQuery.ResultHandler<User>()
+    {
+
+        @Override
+        public boolean handleResult(CursorList<User> cursorList) {
+            adapter.setFollowings(cursorList.asList());
+            cursorList.close();
+            return true;
+        }
+    };
 
     private Callback<ParseBase<ArrayList<User>>> onPopularLoaded = new Callback<ParseBase<ArrayList<User>>>() {
         @Override
@@ -67,7 +81,11 @@ public class PopularActivity extends AuthenticatedActivity {
         adapter = new UserListAdapter(this);
         list.setAdapter(adapter);
         list.setOnItemClickListener(onUserSelected);
+        emptyView.setText(getString(R.string.fetch_popular_tip));
+        list.setEmptyView(emptyView);
         me = QueryBuilder.me().get();
+        QueryBuilder.followings(this.me).getAsync(getLoaderManager(),onFollowingsLoaded, Connection.class);
+        startService(FollowingsSyncService.newIntent(this, me));
         ApiService.getInstance().getPopular(onPopularLoaded);
     }
 
