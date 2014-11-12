@@ -28,34 +28,34 @@ public class ImagePostFragment extends PostFragment{
         View view = inflater.inflate(R.layout.fragment_image_post,container,false);
         ButterKnife.inject(this, view);
         Utils.addSystemUIPadding(getActivity(), this.postView);
-        this.content.setText(this.post.text);
-        this.commentCounter.setText("" + this.post.commentCount);
-        this.heartCounter.setText("" + this.post.heartCount);
-        this.postView.setShouldAnimateBackgroundChange(true);
+        content.setText(this.post.text);
+        commentCounter.setText("" + this.post.commentCount);
+        heartCounter.setText("" + this.post.heartCount);
+        postView.setShouldAnimateBackgroundChange(true);
         Picasso.with(getActivity()).load(this.post.image).noFade().into(this.postView);
         return view;
     }
 
-    public boolean onBackPressed()
-    {
-        if (this.postView.isZoomedOut())
+    @Override
+    public boolean onBackPressed() {
+        if (postView.isZoomedOut())
         {
-            this.postView.toggleZoomedOut();
+            postView.toggleZoomedOut();
             return true;
         }
         return super.onBackPressed();
     }
-
-    public void onPause()
-    {
+    @Override
+    public void onPause() {
         super.onPause();
-        this.postView.setPanningEnabled(false);
-        this.postView.setClickToZoomEnabled(false);
+        postView.setPanningEnabled(false);
+        postView.setClickToZoomEnabled(false);
     }
-    public void onResume()
-    {
+
+    @Override
+    public void onResume() {
         super.onResume();
-        this.postView.setPanningEnabled(true);
-        this.postView.setClickToZoomEnabled(true);
+        postView.setPanningEnabled(true);
+        postView.setClickToZoomEnabled(true);
     }
 }
