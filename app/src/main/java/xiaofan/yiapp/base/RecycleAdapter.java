@@ -20,7 +20,7 @@ public abstract class RecycleAdapter extends BaseAdapter{
     public final View getView(int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position);
         if(convertView == null){
-            convertView = createView(position,parent);
+            convertView = createView(type,parent);
         }
         prepareView(convertView,type,position);
         return convertView;
