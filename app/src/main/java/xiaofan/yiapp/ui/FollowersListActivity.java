@@ -46,6 +46,9 @@ public class FollowersListActivity extends AuthenticatedActivity{
         @Override
         public boolean handleResult(CursorList<User> cursorList) {
             adapter.setUsers(cursorList.asList());
+            if(adapter.getUsers() == null || adapter.getUsers().size() == 0){
+                emptyView.setText(getString(R.string._no_followers_tip));
+            }
             cursorList.close();
             return true;
         }

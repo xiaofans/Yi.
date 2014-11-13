@@ -63,7 +63,7 @@ public class FollowToggleService extends Service{
             connection = QueryBuilder.connection(me,user).get();
             String objectId = connection.objectId;
             Log.w(TAG,"objectId is:" + objectId);
-            ApiService.getInstance().setCancelFollow(new UniversalBean(objectId,user.objectId), new CancelFollowToggleCallback(me, user, false,objectId));
+            ApiService.getInstance().setCancelFollow(connection, new CancelFollowToggleCallback(me, user, false,objectId));
             connection.deleteAsync(new Model.OnDeletedCallback() {
                 @Override
                 public void onDeleted() {

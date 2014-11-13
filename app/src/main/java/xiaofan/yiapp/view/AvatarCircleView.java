@@ -61,7 +61,6 @@ public class AvatarCircleView extends View implements Target{
 
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-        Log.w(TAG,"-- onBitmapLoaded --");
         setAvatar(bitmap);
     }
 

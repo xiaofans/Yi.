@@ -23,6 +23,7 @@ import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.AuthenticatedActivity;
 import xiaofan.yiapp.base.ParseBase;
+import xiaofan.yiapp.service.FollowToggleService;
 import xiaofan.yiapp.service.FollowingsSyncService;
 import xiaofan.yiapp.utils.QueryBuilder;
 
@@ -74,11 +75,20 @@ public class PopularActivity extends AuthenticatedActivity {
         }
     };
 
+    private UserListAdapter.OnUserFollowToggledListener onUserFollowToggledListener = new UserListAdapter.OnUserFollowToggledListener()
+    {
+        @Override
+        public void onUserFollowToggled(User user, boolean follow) {
+            startService(FollowToggleService.newIntent(PopularActivity.this.getBaseContext(), user, follow));
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular);
         adapter = new UserListAdapter(this);
+        adapter.setOnUserFollowToggledListener(onUserFollowToggledListener);
         list.setAdapter(adapter);
         list.setOnItemClickListener(onUserSelected);
         emptyView.setText(getString(R.string.fetch_popular_tip));

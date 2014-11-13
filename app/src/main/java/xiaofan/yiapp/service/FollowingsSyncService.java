@@ -41,7 +41,7 @@ public class FollowingsSyncService extends IntentService{
             EventBus.post(new FailureEvent());
             return;
         }
-        boolean isSyncSuccess = false;
+        boolean isSyncSuccess = true;
         User me = intent.getParcelableExtra("user");
         try {
             ParseBase<ArrayList<User>> result = ApiService.getInstance().getFollowings(me);

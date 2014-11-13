@@ -114,4 +114,8 @@ public class UserListAdapter extends RecycleAdapter{
     {
         public abstract void onUserFollowToggled(User user, boolean follow);
     }
+
+    public List<User> getUsers() {
+        return users;
+    }
 }

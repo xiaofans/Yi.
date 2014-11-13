@@ -52,6 +52,9 @@ public class FollowingsListActivity extends AuthenticatedActivity{
                 }
             }
           adapter.setUsers(FollowingsListActivity.this.initialFollowings);
+            if(adapter.getUsers() == null || adapter.getUsers().size() == 0){
+                emptyView.setText(getString(R.string._no_followings_tip));
+            }
           adapter.setFollowings(list);
            return true;
         }

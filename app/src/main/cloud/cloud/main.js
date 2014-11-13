@@ -207,7 +207,27 @@ Parse.Cloud.afterSave("Connections", function(request, response) {
 
 // 取消关注
 Parse.Cloud.define("setCancelFollow",function(request,response){
-    var id = request.params.objectId;
+    var followerId = request.params.followerId;
+    var followingId = request.params.followingId;
+    var query = new Parse.Query("Connections");
+    query.equalTo("followerId",followerId);
+    query.equalTo("followingId",followingId);
+    query.find().then(function(results){
+       console.log("cancel follow results:" + JSON.stringify(results))
+       var succ = false;
+       return results[0].destroy();
+    }).then(function(results){
+        console.log("destory follow results:" + JSON.stringify(results));
+        var succ = false;
+        if(results != null && results.length > 0){
+            succ = true;
+        }
+        response.success(true);
+    },
+    function(error) {
+          response.error("movie lookup failed" + JSON.stringify(error));
+    });
+  /*  var id = request.params.objectId;
     var query = new Parse.Query("Connections");
     var userId = request.params.userId;
     query.get(id,{
@@ -228,7 +248,7 @@ Parse.Cloud.define("setCancelFollow",function(request,response){
              console.log("failed to cancel follow!");
              response.error(false);
         }
-    });
+    });*/
 });
 
 Parse.Cloud.afterDelete("Connections", function(request, response) {

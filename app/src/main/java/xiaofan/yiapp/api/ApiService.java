@@ -99,6 +99,6 @@ public class ApiService {
         public abstract void setFollow(@Body ToggleFollow toggleFollow, Callback<ParseBase<Connection>> callback);
 
         @POST("/functions/setCancelFollow")
-        public abstract void setCancelFollow(@Body UniversalBean universalBean,  Callback<ParseBase<Boolean>> callback);
+        public abstract void setCancelFollow(@Body Connection connection,  Callback<ParseBase<Boolean>> callback);
     }
 }

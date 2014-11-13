@@ -27,4 +27,6 @@
     <string name="_fetch_followers_tip">获取粉丝</string>
     <string name="_fetch_following_tip">获取关注</string>
     <string name="fetch_popular_tip">获取受欢迎的</string>
+    <string name="_no_followers_tip">暂无粉丝</string>
+    <string name="_no_followings_tip">暂无关注</string>
 </resources>
