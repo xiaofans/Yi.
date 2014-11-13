@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.InjectView;
 import retrofit.Callback;
@@ -58,6 +59,13 @@ public class PopularActivity extends AuthenticatedActivity {
     private Callback<ParseBase<ArrayList<User>>> onPopularLoaded = new Callback<ParseBase<ArrayList<User>>>() {
         @Override
         public void success(ParseBase<ArrayList<User>> result, Response response) {
+            if(result.results != null && result.results.size() > 0){
+                Iterator<User> iterator = result.results.iterator();
+                while (iterator.hasNext()){
+                    User user = iterator.next();
+                    user.id = user.uid;
+                }
+            }
             adapter.setUsers(result.results);
         }
 

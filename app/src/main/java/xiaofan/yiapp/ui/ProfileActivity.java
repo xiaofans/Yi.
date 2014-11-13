@@ -222,6 +222,12 @@ public class ProfileActivity extends AuthenticatedActivity{
             detailPosition = savedInstanceState.getInt("detailPosition");
         }
         setUser((User)getIntent().getParcelableExtra("user"));
+        User me = QueryBuilder.me().get();
+        if(me.id == user.id){
+            user.me = true;
+        }else{
+            user.me = false;
+        }
         user.save();
         header.measure(View.MeasureSpec.makeMeasureSpec(RelativeLayout.LayoutParams.MATCH_PARENT, View.MeasureSpec.UNSPECIFIED),View.MeasureSpec.makeMeasureSpec(RelativeLayout.LayoutParams.WRAP_CONTENT, View.MeasureSpec.UNSPECIFIED));
         postsAdapter = new PostsGridHeaderAdapter(this);
@@ -236,7 +242,6 @@ public class ProfileActivity extends AuthenticatedActivity{
         postsGrid.setOnItemClickListener(onPostClicked);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)emptyView.getLayoutParams();
         layoutParams.topMargin = (sHeight / 2);
-        User me = QueryBuilder.me().get();
         if(me.id == user.id){
             toggleButton.setVisibility(View.GONE);
         }
