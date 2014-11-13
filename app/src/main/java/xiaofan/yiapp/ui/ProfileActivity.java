@@ -2,8 +2,10 @@ package xiaofan.yiapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -74,16 +76,32 @@ public class ProfileActivity extends AuthenticatedActivity{
     private PostsGridHeaderAdapter postsAdapter;
     private double gridItemScale;
 
+    private static final String TAG = ProfileActivity.class.getSimpleName();
+
     private AbsListView.OnScrollListener onPostGridScrolled = new AbsListView.OnScrollListener()
     {
         @Override
         public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-
         }
 
         @Override
         public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+            float disHeight = fakeActionBar.getHeight() - header.getHeight();
+            float transHeight = 0.0f;
+            if(postsGrid.getChildCount() > 0){
+                transHeight =  Math.min(0.0F, Math.max(disHeight, postsGrid.getChildAt(0).getBottom() - header.getHeight()));
+                if(postsGrid.getFirstVisiblePosition() != 0){
+                    transHeight = disHeight;
+                }
+            }
+            float f3 = Math.min(transHeight - disHeight / 2.0F, 0.0F) / (disHeight / 2.0F);
+            float f4 = f3 * (f3 * f3);
+            fakeActionBar.getBackground().setAlpha((int)(255.0F * f4 + 0.0F * (1.0F - f4)));
+            int j = (int)(0.0F * f4 + 255.0F * (1.0F - f4));
+            userName.setTextColor(Color.argb(255, j, j, j));
+            header.setTranslationY(transHeight);
+            int k = Color.argb((int)(0.0F * f4 + 255.0F * (1.0F - f4)), 51, 51, 51);
+            userName.setShadowLayer(2.0F, 0.0F, 2.0F, k);
         }
     };
 
