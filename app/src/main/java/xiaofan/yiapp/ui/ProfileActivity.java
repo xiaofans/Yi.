@@ -148,7 +148,8 @@ public class ProfileActivity extends AuthenticatedActivity{
         postsAdapter.setHeaderHeight(height);
         int sHeight = getResources().getDisplayMetrics().heightPixels;
         int sWidth = getResources().getDisplayMetrics().widthPixels;
-        gridItemScale = ((sWidth / 2 - (this.postsGrid.getPaddingLeft() + this.postsGrid.getPaddingRight() + this.postsGrid.getHorizontalSpacing())) / sWidth);
+        gridItemScale = ((double)(sWidth / 2 - (postsGrid.getPaddingLeft() + postsGrid.getPaddingRight() + postsGrid.getHorizontalSpacing())) / (double)sWidth);
+        postsAdapter.setPostHeight((int)(sHeight * gridItemScale));
         postsGrid.setAdapter(postsAdapter);
         postsGrid.setOnScrollListener(onPostGridScrolled);
         postsGrid.setOnItemClickListener(onPostClicked);

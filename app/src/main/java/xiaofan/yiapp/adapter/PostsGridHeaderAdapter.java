@@ -128,6 +128,17 @@ public class PostsGridHeaderAdapter extends RecycleAdapter{
         return posts.get(position - 2).pid;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if(position < 2){
+            return VIEW_TYPE_HEADER;
+        }else if(Post.TYPE_TEXT.equals(getItem(position).type)){
+            return VIEW_TYPE_TEXT_POST;
+        }else if(Post.TYPE_IMAGE.equals(getItem(position).type)){
+            return VIEW_TYPE_IMAGE_POST;
+        }
+        return super.getItemViewType(position);
+    }
 
     @Override
     public int getViewTypeCount() {
