@@ -286,4 +286,16 @@ public class ProfileActivity extends AuthenticatedActivity{
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        springSystem.removeAllListeners();
+    }
+
+    @OnClick(R.id.user_name)
+    public void onUpClicked()
+    {
+        finish();
+    }
 }

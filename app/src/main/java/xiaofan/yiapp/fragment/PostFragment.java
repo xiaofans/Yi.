@@ -15,9 +15,11 @@ import butterknife.OnClick;
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.api.entity.HeartToggle;
 import xiaofan.yiapp.base.BaseFragment;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.UserClickEvent;
+import xiaofan.yiapp.service.HeartToggleService;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.view.AvatarCircleView;
 
@@ -98,6 +100,7 @@ public abstract class PostFragment extends BaseFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         post = ((Post)getArguments().getParcelable("post"));
+        me = QueryBuilder.me().get();
         showAuthor = getArguments().getBoolean("show_author", true);
         if(showAuthor){
             author = QueryBuilder.user(post.authorId).get();
@@ -126,6 +129,22 @@ public abstract class PostFragment extends BaseFragment{
         localObjectAnimator.setDuration(500L);
         localObjectAnimator.setInterpolator(new OvershootInterpolator());
         localObjectAnimator.start();
+        if(post.hasHearted){
+            if(post.heartCount > 0){
+                post.heartCount -= 1;
+            }
+            heartImage.setImageResource(R.drawable.ic_heart_empty);
+        }else{
+            post.heartCount += 1;
+            heartImage.setImageResource(R.drawable.ic_heart_filled);
+        }
+        post.hasHearted = !post.hasHearted;
+        heartCounter.setText(""+post.heartCount);
+        HeartToggle heartToggle = new HeartToggle();
+        heartToggle.hasHearted = post.hasHearted;
+        heartToggle.authorId = me.id;
+        heartToggle.postId = post.pid;
+        getActivity().startService(HeartToggleService.newIntent(getActivity(), post,heartToggle));
     }
 
     @OnClick(R.id.overflow)

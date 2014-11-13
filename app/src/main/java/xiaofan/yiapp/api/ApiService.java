@@ -20,6 +20,7 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import xiaofan.yiapp.api.entity.HeartToggle;
 import xiaofan.yiapp.api.entity.Timeline;
 import xiaofan.yiapp.api.entity.ToggleFollow;
 import xiaofan.yiapp.api.entity.UniversalBean;
@@ -100,5 +101,12 @@ public class ApiService {
 
         @POST("/functions/setCancelFollow")
         public abstract void setCancelFollow(@Body Connection connection,  Callback<ParseBase<Boolean>> callback);
+
+        @POST("/classes/Users")
+        public abstract ParseBase<User> getUser(@Query("uid") long id);
+
+        @POST("/classes/Heart")
+        public abstract void heartToggle(@Body HeartToggle heartToggle,Callback<HeartToggle> callback);
+
     }
 }

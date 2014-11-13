@@ -68,6 +68,12 @@ public class PostsGridHeaderAdapter extends RecycleAdapter{
 
     @Override
     protected void prepareView(View view, int type, int position) {
+        if(!animatedPositions.get(position)){
+            view.setScaleX(0.8F);
+            view.setScaleY(0.8F);
+            view.setAlpha(0.0F);
+            view.animate().scaleX(1.0F).scaleY(1.0F).alpha(1.0F).setStartDelay(100 + this.rand.nextInt(100)).setDuration(300L).setInterpolator(this.animInterpolator);
+        }
         Post post = getItem(position);
         switch (type){
             case VIEW_TYPE_HEADER:
@@ -95,6 +101,12 @@ public class PostsGridHeaderAdapter extends RecycleAdapter{
                 localTextPostViewHolder.content.setText(post.text);
                 break;
         }
+
+        animatedPositions.put(position, true);
+      /*  view.animate().cancel();
+        view.setScaleX(1.0F);
+        view.setScaleY(1.0F);
+        view.setAlpha(1.0F);*/
     }
 
     public String parseDay(Date createdAt){
