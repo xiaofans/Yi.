@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringConfig;
+import com.facebook.rebound.SpringListener;
+import com.facebook.rebound.SpringSystem;
 import com.squareup.picasso.Picasso;
 
 import butterknife.InjectView;
@@ -31,6 +36,8 @@ import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.AuthenticatedActivity;
+import xiaofan.yiapp.fragment.ImagePostFragment;
+import xiaofan.yiapp.fragment.PostFragment;
 import xiaofan.yiapp.service.FollowToggleService;
 import xiaofan.yiapp.service.PostsSyncService;
 import xiaofan.yiapp.service.UserSyncService;
@@ -76,7 +83,54 @@ public class ProfileActivity extends AuthenticatedActivity{
     private PostsGridHeaderAdapter postsAdapter;
     private double gridItemScale;
 
+    private Spring scaleSpring;
+    private SpringSystem springSystem;
+
     private static final String TAG = ProfileActivity.class.getSimpleName();
+
+    private SpringListener detailScaleSpringListener = new SpringListener()
+    {
+
+        @Override
+        public void onSpringUpdate(Spring spring) {
+            View localView = postsGrid.getChildAt(ProfileActivity.this.detailPosition);
+            if(localView == null) return;
+            double d1 = spring.getCurrentValue();
+            double d2 = (d1 - ProfileActivity.this.gridItemScale) / (1.0D - ProfileActivity.this.gridItemScale);
+            float f1 = localView.getLeft() + localView.getWidth() / 2;
+            float f2 = localView.getTop() + localView.getHeight() / 2;
+            float f3 = ProfileActivity.this.postDetailContainer.getWidth() / 2;
+            float f4 = ProfileActivity.this.postDetailContainer.getHeight() / 2;
+            localView.setScaleX((float)(d1 / ProfileActivity.this.gridItemScale));
+            localView.setScaleY((float)(d1 / ProfileActivity.this.gridItemScale));
+            localView.setTranslationX((float)(d2 * (f3 - f1) + 0.0D * (1.0D - d2)));
+            localView.setTranslationY((float)(d2 * (f4 - f2) + 0.0D * (1.0D - d2)));
+            postDetailContainer.setScaleX((float)d1);
+            postDetailContainer.setScaleY((float)d1);
+            postDetailContainer.setTranslationX((float)(0.0D * d2 + (1.0D - d2) * (f1 - f3)));
+            postDetailContainer.setTranslationY((float)(0.0D * d2 + (1.0D - d2) * (f2 - f4)));
+            postDetailContainer.setAlpha((float)(1.0D * d2 + 0.0D * (1.0D - d2)));
+        }
+
+        @Override
+        public void onSpringAtRest(Spring spring) {
+            if (spring.getCurrentValue() != 1.0D)
+            {
+                Fragment fragment =getSupportFragmentManager().findFragmentById(R.id.post_detail_container);
+               getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+        }
+
+        @Override
+        public void onSpringActivate(Spring spring) {
+
+        }
+
+        @Override
+        public void onSpringEndStateChange(Spring spring) {
+
+        }
+    };
 
     private AbsListView.OnScrollListener onPostGridScrolled = new AbsListView.OnScrollListener()
     {
@@ -131,6 +185,15 @@ public class ProfileActivity extends AuthenticatedActivity{
         @Override
         public void onItemClick(AdapterView<?> parent, View convertView, int position, long id) {
             if(position < 2) return;
+            detailPosition = position - parent.getFirstVisiblePosition();
+            detailPost = postsAdapter.getItem(position);
+            PostFragment postFragment = PostFragment.newInstance(detailPost, false);
+            if ((postFragment instanceof ImagePostFragment)) {
+                postFragment.getArguments().putBoolean("extra_animate_new_background", false);
+            }
+           getSupportFragmentManager().beginTransaction().replace(R.id.post_detail_container, postFragment).commit();
+           scaleSpring.setVelocity(10.0D);
+           scaleSpring.setEndValue(1.0D);
 
         }
     };
@@ -177,6 +240,11 @@ public class ProfileActivity extends AuthenticatedActivity{
         if(me.id == user.id){
             toggleButton.setVisibility(View.GONE);
         }
+        springSystem = SpringSystem.create();
+        scaleSpring = springSystem.createSpring();
+        scaleSpring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(60.0D, 9.0D));
+        scaleSpring.setCurrentValue(gridItemScale);
+        this.scaleSpring.addListener(detailScaleSpringListener);
         QueryBuilder.user(user.id).getAsync(getLoaderManager(), this.onUserChanged, Connection.class);
         QueryBuilder.posts(user).getAsync(getLoaderManager(), this.onPostsLoaded, Post.class);
         startService(PostsSyncService.newIntent(this, user));
@@ -202,5 +270,20 @@ public class ProfileActivity extends AuthenticatedActivity{
         super.onSaveInstanceState(outState);
         outState.putParcelable("detailPost", detailPost);
         outState.putInt("detailPosition", detailPosition);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!dispatchBackPressedToFragments())
+        {
+            if (this.detailPost != null)
+            {
+                this.detailPost = null;
+                this.scaleSpring.setVelocity(-10.0D);
+                this.scaleSpring.setEndValue(gridItemScale);
+            }else{
+                finish();
+            }
+        }
     }
 }

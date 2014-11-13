@@ -38,7 +38,7 @@ public abstract class BaseActivity extends FragmentActivity{
         }
     }
 
-    private boolean dispatchBackPressedToFragments() {
+    public boolean dispatchBackPressedToFragments() {
         List<Fragment> list = getSupportFragmentManager().getFragments();
         if(list == null) return false;
         Iterator<Fragment> iterator = list.iterator();
