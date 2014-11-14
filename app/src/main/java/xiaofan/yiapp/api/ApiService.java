@@ -105,7 +105,7 @@ public class ApiService {
         @POST("/classes/Users")
         public abstract ParseBase<User> getUser(@Query("uid") long id);
 
-        @POST("/classes/Heart")
+        @POST("/functions/setHeart")
         public abstract void heartToggle(@Body HeartToggle heartToggle,Callback<HeartToggle> callback);
 
     }

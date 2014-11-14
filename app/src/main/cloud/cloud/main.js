@@ -227,28 +227,37 @@ Parse.Cloud.define("setCancelFollow",function(request,response){
     function(error) {
           response.error("movie lookup failed" + JSON.stringify(error));
     });
-  /*  var id = request.params.objectId;
-    var query = new Parse.Query("Connections");
-    var userId = request.params.userId;
-    query.get(id,{
-        success:function(connection){
-            if(connection != null){
-                connection.destroy({
-                    success:function(conn){
-                        response.success(true);
-                    },
-                    error:function(conn,error){
-                         response.success(false);
-                    }
-                });
+});
 
-            }
-        },
-        error:function(){
-             console.log("failed to cancel follow!");
-             response.error(false);
+// add/cancel ❤
+Parse.Cloud.define("setHeart",function(request,response){
+    var postId = request.params.postId;
+    var authorId = request.params.authorId;
+    var hasHearted = request.params.hasHearted;
+    var query = new Parse.Query("Heart");
+    query.equalTo("postId",postId);
+    query.equalTo("authorId",authorId);
+    query.find().then(function(results){
+        if(results == null || results.length == 0){
+            var heart = new Parse.Object("Heart");
+            heart.set("postId",postId);
+            heart.set("authorId",authorId);
+            heart.set("hasHearted",hasHearted);
+            return heart.save();
+        }else{
+            results[0].set("hasHearted",hasHearted);
+            return results[0].save();
         }
-    });*/
+    }).then(function(results){
+        var succ = false;
+        if(results != null && results.length > 0){
+            succ = true;
+        }
+        response.success(succ);
+    },function(error) {
+         response.error("setHeart failed" + JSON.stringify(error));
+    });
+
 });
 
 Parse.Cloud.afterDelete("Connections", function(request, response) {
