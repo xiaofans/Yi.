@@ -85,8 +85,9 @@ Parse.Cloud.define("timeline",function(request,response){
         }).then(function(results){
             for(var i = 0; i < results.length; i++){
                 for(var j = 0; j < posts.length; j ++){
-                    if(results[j].get("postId") == posts[j].get("pid")){
+                    if(results[i].get("postId") == posts[j].get("pid")){
                         posts[j].set("hasHearted",results[j].get("hasHearted"));
+                        posts[j].save();
                     }
                 }
             }

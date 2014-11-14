@@ -20,6 +20,7 @@ import xiaofan.yiapp.base.BaseFragment;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.UserClickEvent;
 import xiaofan.yiapp.service.HeartToggleService;
+import xiaofan.yiapp.ui.PostCommentsActivity;
 import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.view.AvatarCircleView;
 
@@ -115,7 +116,7 @@ public abstract class PostFragment extends BaseFragment{
     @OnClick(R.id.comment_post)
     public void onCommentClicked()
     {
-
+        startActivity(PostCommentsActivity.newIntent(getActivity(),post));
     }
 
     @OnClick(R.id.heart_post)

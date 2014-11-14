@@ -37,6 +37,11 @@ public class ImagePostFragment extends PostFragment{
         heartCounter.setText("" + post.heartCount);
         postView.setShouldAnimateBackgroundChange(true);
         Picasso.with(getActivity()).load(post.image).noFade().into(postView);
+        if(post.hasHearted){
+            heartImage.setImageResource(R.drawable.ic_heart_filled);
+        }else{
+            heartImage.setImageResource(R.drawable.ic_heart_empty);
+        }
         if(showAuthor){
             Picasso.with(getActivity()).load(author.avatar).into(avatar);
         }

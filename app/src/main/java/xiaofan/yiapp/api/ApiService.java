@@ -108,5 +108,6 @@ public class ApiService {
         @POST("/functions/setHeart")
         public abstract void heartToggle(@Body HeartToggle heartToggle,Callback<HeartToggle> callback);
 
+        public abstract void getComments();
     }
 }

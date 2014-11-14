@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+        />
+        <ProgressBar
+            android:layout_gravity="center"
+            android:id="@+id/loading_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+        <include layout="@layout/view_list_empty" />
+    </FrameLayout>
+    <View
+        android:background="#ffe5e5e5"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+    />
+    <LinearLayout
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:padding="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:textSize="18.0sp"
+            android:textColor="@color/text_dark"
+            android:id="@+id/comment"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:hint="@string/comment"
+            android:maxLines="4"
+            android:layout_weight="1.0"
+            android:inputType="textCapSentences|textMultiLine"
+            />
+        <FrameLayout
+            android:layout_width="36.0dip"
+            android:layout_height="36.0dip"
+            android:layout_marginLeft="8.0dip">
+            <ProgressBar
+                android:id="@+id/posting_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:indeterminate="true"
+                android:alpha="0.0"
+            />
+            <ImageButton
+                android:id="@+id/submit_comment"
+                android:background="@null"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_action_send"
+             />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

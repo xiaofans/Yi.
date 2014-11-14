@@ -35,6 +35,11 @@ public class TextPostFragment extends PostFragment{
         content.setText(post.text);
         commentCounter.setText("" + post.commentCount);
         heartCounter.setText("" + post.heartCount);
+        if(post.hasHearted){
+            heartImage.setImageResource(R.drawable.ic_heart_filled);
+        }else{
+            heartImage.setImageResource(R.drawable.ic_heart_empty);
+        }
         if(showAuthor){
             Picasso.with(getActivity()).load(author.avatar).noFade().into(this.avatar);
         }

@@ -56,6 +56,7 @@
         <activity android:theme="@style/ProfileTheme" android:name=".ui.ProfileActivity" />
         <activity android:label="@string/following" android:name=".ui.FollowingsListActivity" android:parentActivityName=".ui.TimelineActivity" />
         <activity android:label="@string/followers" android:name=".ui.FollowersListActivity" android:parentActivityName=".ui.TimelineActivity" />
+        <activity android:label="@string/comments" android:name=".ui.PostCommentsActivity" android:windowSoftInputMode="stateVisible|adjustResize" />
         <service android:name=".service.AuthenticationService"/>
         <service android:name=".service.UploadPostService"/>
         <service android:name=".service.PostsSyncService"/>

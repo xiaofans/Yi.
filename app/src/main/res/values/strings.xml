@@ -29,4 +29,7 @@
     <string name="fetch_popular_tip">获取受欢迎的</string>
     <string name="_no_followers_tip">暂无粉丝</string>
     <string name="_no_followings_tip">暂无关注</string>
+    <string name="comment">评论</string>
+    <string name="_no_commits_tip">暂无评论</string>
+    <string name="comments">评论</string>
 </resources>
