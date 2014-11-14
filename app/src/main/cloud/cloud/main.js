@@ -61,6 +61,7 @@ Parse.Cloud.define("signup", function(request, response) {
 Parse.Cloud.define("timeline",function(request,response){
     var meId = request.params.meId;
     var userId = request.params.userId;
+    var posts = [];
      var query = new Parse.Query("Connections");
         query.equalTo("followerId",meId);
         query.find().then(function(results){
@@ -75,15 +76,25 @@ Parse.Cloud.define("timeline",function(request,response){
           query2.containedIn("authorId",id);
           return query2.find();
         }).then(function(results){
-            var posts = [];
              for(var j = 0; j < results.length; j ++){
                     posts.push(results[j]);
              }
-             response.success(posts);
+           var query3 = new Parse.Query("Heart");
+           query3.equalTo("authorId",meId);
+           return query3.find();
+        }).then(function(results){
+            for(var i = 0; i < results.length; i++){
+                for(var j = 0; j < posts.length; j ++){
+                    if(results[j].get("postId") == posts[j].get("pid")){
+                        posts[j].set("hasHearted",results[j].get("hasHearted"));
+                    }
+                }
+            }
+            response.success(posts);
         },
-          function(error) {
-                response.error("movie lookup failed" + JSON.stringify(error));
-          });
+       function(error) {
+             response.error("movie lookup failed" + JSON.stringify(error));
+       });
 });
 
 // 获取关注
@@ -141,10 +152,6 @@ Parse.Cloud.define("getFollowers",function(request,response){
       });
 });
 
-// 获取所有动态
-Parse.Cloud.define("getTimeline",function(request,response){
-
-});
 
 //  关注
 Parse.Cloud.define("setFollow",function(request,response){
@@ -249,15 +256,27 @@ Parse.Cloud.define("setHeart",function(request,response){
             return results[0].save();
         }
     }).then(function(results){
+        var query2 = new Parse.Query("Posts");
+        query2.equalTo("pid",postId);
+        return query2.find();
+    }).then(function(results){
         var succ = false;
         if(results != null && results.length > 0){
+            var hc = results[0].get("heartCount");
+            if(hasHearted){
+                results[0].set("heartCount",hc + 1);
+            }else{
+                if(hc > 0){
+                results[0].set("heartCount",hc - 1);
+                }
+            }
+            results[0].save();
             succ = true;
         }
         response.success(succ);
     },function(error) {
          response.error("setHeart failed" + JSON.stringify(error));
     });
-
 });
 
 Parse.Cloud.afterDelete("Connections", function(request, response) {

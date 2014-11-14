@@ -39,24 +39,24 @@ public class HeartToggleService extends Service{
             EventBus.post(new FailureEvent());
             return START_FLAG_REDELIVERY;
         }
+        if(intent != null){
+            final HeartToggle heartToggle =  intent.getExtras().getParcelable("heartToggle");
+            final Post post = intent.getExtras().getParcelable("post");
+            SocialApi.getCurrent(this).getSocialAuth(this,new LoginCallback() {
+                @Override
+                public void failure(LoginError loginError) {
+                    EventBus.post(new FailureEvent());
+                }
 
-        final HeartToggle heartToggle =  intent.getExtras().getParcelable("heartToggle");
-        final Post post = intent.getExtras().getParcelable("post");
-        SocialApi.getCurrent(this).getSocialAuth(this,new LoginCallback() {
-            @Override
-            public void failure(LoginError loginError) {
-                EventBus.post(new FailureEvent());
-            }
-
-            @Override
-            public void success(SocialAuth socialAuth) {
-                ApiService.getInstance().heartToggle(heartToggle,new HeartToggleCallback(post));
-            }
-        });
-
-
+                @Override
+                public void success(SocialAuth socialAuth) {
+                    ApiService.getInstance().heartToggle(heartToggle,new HeartToggleCallback(post));
+                }
+            });
+        }else{
+            stopSelf();
+        }
         return START_FLAG_REDELIVERY;
-
     }
 
     class HeartToggleCallback implements Callback<HeartToggle>{
