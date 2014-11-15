@@ -19,6 +19,6 @@ public class SettingsActivity extends AuthenticatedActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+        setContentView(R.layout.activity_about);
     }
 }
