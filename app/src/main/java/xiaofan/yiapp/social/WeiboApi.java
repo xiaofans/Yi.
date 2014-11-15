@@ -73,8 +73,11 @@ public class WeiboApi extends SocialApi{
     }
 
     @Override
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         Toast.makeText(activity,"onActivityResult invoked",Toast.LENGTH_LONG).show();
+        if (mSsoHandler != null) {
+            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
     }
 
     @Override

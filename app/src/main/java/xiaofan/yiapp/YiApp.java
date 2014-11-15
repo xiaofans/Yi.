@@ -1,7 +1,7 @@
 package xiaofan.yiapp;
 
+import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.multidex.MultiDexApplication;
 
 import com.squareup.otto.Subscribe;
 
@@ -16,7 +16,7 @@ import xiaofan.yiapp.utils.QueryBuilder;
 /**
  * Created by zhaoyu on 2014/10/9.
  */
-public class YiApp  extends MultiDexApplication{
+public class YiApp  extends Application{
 
     private static final String TAG = YiApp.class.getSimpleName();
 

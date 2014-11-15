@@ -46,7 +46,7 @@ public class LoginActivity extends BaseActivity{
         public void onClick(View view) {
             loginInProgress = true;
             SocialApi.setCurrent(LoginActivity.this,(String)view.getTag());
-           if(WeiboApi.TAG.equals(view.getTag())){
+           //if(WeiboApi.TAG.equals(view.getTag())){
                 SocialApi.getCurrent(LoginActivity.this).login(LoginActivity.this,new LoginCallback() {
                     @Override
                     public void failure(LoginError loginError) {
@@ -60,9 +60,9 @@ public class LoginActivity extends BaseActivity{
                         startService(AuthenticationService.newIntent(LoginActivity.this));
                     }
                 });
-           }else{
-               startActivity(TimelineActivity.newIntent(LoginActivity.this));
-           }
+//           }else{
+//               startActivity(TimelineActivity.newIntent(LoginActivity.this));
+//           }
 
         }
     };
