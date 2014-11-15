@@ -65,6 +65,7 @@
         <service android:name=".service.FollowToggleService"/>
         <service android:name=".service.TimelineSyncService"/>
         <service android:name=".service.HeartToggleService"/>
+        <service android:name=".service.DeletePostService"/>
     </application>
 
 </manifest>

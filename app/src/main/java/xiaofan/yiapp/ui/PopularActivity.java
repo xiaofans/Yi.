@@ -9,6 +9,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import butterknife.InjectView;
@@ -66,6 +68,12 @@ public class PopularActivity extends AuthenticatedActivity {
                     user.id = user.uid;
                 }
             }
+            Collections.sort(result.results, new Comparator<User>() {
+                @Override
+                public int compare(User user, User user2) {
+                    return -(user.followersCount - user2.followersCount);
+                }
+            });
             adapter.setUsers(result.results);
         }
 

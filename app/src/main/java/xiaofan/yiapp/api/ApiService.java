@@ -15,6 +15,7 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -26,6 +27,7 @@ import xiaofan.yiapp.api.entity.ToggleFollow;
 import xiaofan.yiapp.api.entity.UniversalBean;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.base.ParseBase;
+import xiaofan.yiapp.service.DeletePostService;
 import xiaofan.yiapp.service.FollowToggleService;
 
 /**
@@ -108,6 +110,13 @@ public class ApiService {
         @POST("/functions/setHeart")
         public abstract void heartToggle(@Body HeartToggle heartToggle,Callback<HeartToggle> callback);
 
-        public abstract void getComments();
+        @POST("/functions/getComments")
+        public abstract void getComments(@Body UniversalBean bean,Callback<ParseBase<ArrayList<Comment>>> callback);
+
+        @POST("/classes/Comment")
+        public abstract void postComment(@Body Comment c,Callback<ParseBase<Boolean>> callback);
+
+        @POST("/functions/deletePost")
+        public abstract void deletePost(@Body UniversalBean bean, Callback<Post> callback);
     }
 }

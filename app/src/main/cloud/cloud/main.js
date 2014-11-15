@@ -21,7 +21,6 @@ Parse.Cloud.define("signup", function(request, response) {
         query.equalTo("uid", resultJson.id);
         query.find({
             success:function(results){
-                console.log("sign up results is:" + results[0].followingsCount);
                 var result = {};
                 result.id = resultJson.id;
                 result.avatar = resultJson.avatar_large;
@@ -86,7 +85,7 @@ Parse.Cloud.define("timeline",function(request,response){
             for(var i = 0; i < results.length; i++){
                 for(var j = 0; j < posts.length; j ++){
                     if(results[i].get("postId") == posts[j].get("pid")){
-                        posts[j].set("hasHearted",results[j].get("hasHearted"));
+                        posts[j].set("hasHearted",results[i].get("hasHearted"));
                         posts[j].save();
                     }
                 }
@@ -96,6 +95,45 @@ Parse.Cloud.define("timeline",function(request,response){
        function(error) {
              response.error("movie lookup failed" + JSON.stringify(error));
        });
+});
+
+// 获取comment
+Parse.Cloud.define("getComments",function(request,response){
+    var postId = request.params.postId;
+    var query = new Parse.Query("Comment");
+    query.equalTo("postId",postId);
+    query.find({
+           success:function(results){
+                response.success(results);
+           },
+           error:function(){
+               response.error("following look failed...");
+           }
+
+       });
+});
+
+// 删除post
+Parse.Cloud.define("deletePost",function(request,response){
+    var postId = request.params.postId;
+    var query = new Parse.Query("Posts");
+    query.equalTo("pid",postId);
+    query.find().then(function(results){
+        if(results != null && results.length > 0){
+            return results[0].destroy();
+        }else{
+            return null;
+        }
+    }).then(function(result){
+        var succ = false;
+        if(result != null){
+            succ = true;
+        }
+        response.success(succ);
+    },
+    function(error) {
+        response.error("delete post error:" + JSON.stringify(error));
+    });
 });
 
 // 获取关注
@@ -330,6 +368,25 @@ Parse.Cloud.afterSave("Posts",function(request){
           }
         });
 })
+
+Parse.Cloud.afterSave("Comment",function(request){
+      var query = new Parse.Query("Posts");
+      var postId = request.object.get("postId");
+      query.equalTo("pid",postId);
+      query.find({
+          success: function(results) {
+              if(results != null && results.length > 0){
+                    results[0].set("commentCount",results[0].get("commentCount") + 1);
+                    results[0].save();
+              }
+          },
+          error: function(error) {
+            console.error("Got an error " + error.code + " : " + error.message);
+          }
+        });
+})
+
+
 
 Parse.Cloud.job("setPostsId",function(request,status){
      var query = new Parse.Query("Posts");

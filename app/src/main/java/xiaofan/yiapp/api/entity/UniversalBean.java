@@ -7,6 +7,9 @@ public class UniversalBean {
     public String objectId;
     public String userId;
 
+    public long postId;
+
+    public UniversalBean(){}
     public UniversalBean(String objectId, String userId) {
         this.objectId = objectId;
         this.userId = userId;

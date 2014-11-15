@@ -46,7 +46,7 @@ public class FollowersSyncService extends IntentService{
             User user = intent.getParcelableExtra("user");
            ParseBase<ArrayList<User>> result = ApiService.getInstance().getFollowers(user);
            ArrayList<User> users = result.result == null ? new ArrayList<User>() : result.result;
-           Transaction transaction = new Transaction();
+            Transaction transaction = new Transaction();
             Iterator<Connection> iterator = QueryBuilder.connections(null,user).get().iterator();
              while (iterator.hasNext()){
                 iterator.next().delete(transaction);

@@ -46,6 +46,15 @@ public class PostsFragmentAdapter extends NewFragmentStatePagerAdapter {
         return 1 + this.posts.indexOf(post);
     }
 
+    @Override
+    public int getItemId(int position) {
+       if(position == 0){
+           return 0;
+       }else{
+           return (int)posts.get(position - 1).pid;
+       }
+    }
+
     public void setPosts(List<Post> posts) {
         this.posts = posts;
         notifyDataSetChanged();

@@ -16,6 +16,7 @@ import butterknife.InjectView;
 import xiaofan.yiapp.R;
 import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.base.RecycleAdapter;
+import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.view.AvatarCircleView;
 
 /**
@@ -37,9 +38,11 @@ public class UserListAdapter extends RecycleAdapter{
             }
         }
     };
+    private User me;
     public UserListAdapter(Context context) {
         super(context);
         this.context = context;
+        me = QueryBuilder.me().get();
     }
 
     @Override
@@ -57,6 +60,11 @@ public class UserListAdapter extends RecycleAdapter{
         viewHolder.followToggle.setChecked(followings.contains(user));
         viewHolder.followToggle.setOnClickListener(onFollowClicked);
         viewHolder.followToggle.setTag(user);
+        if(me.id == user.id){
+            viewHolder.followToggle.setVisibility(View.GONE);
+        }else{
+            viewHolder.followToggle.setVisibility(View.VISIBLE);
+        }
         if (!user.avatar.equals(viewHolder.avatar.getTag()))
         {
             viewHolder.avatar.setAvatar(null);
@@ -97,8 +105,22 @@ public class UserListAdapter extends RecycleAdapter{
     }
 
     public void setUsers(List<User> users) {
-        this.users = users;
+        this.users = cutIfNeed(users);
         notifyDataSetChanged();
+    }
+
+    private List<User> cutIfNeed(List<User> users) {
+          if(users == null){
+              return new ArrayList<User>();
+          }
+        if(users.size() < 99){
+            return users;
+        }
+        ArrayList<User> list = new ArrayList<User>();
+        for(int i = 0; i < 99; i++){
+            list.add(users.get(i));
+        }
+        return list;
     }
 
     public void setFollowings(List<User> followings) {

@@ -58,7 +58,9 @@ public class FollowToggleService extends Service{
             user.save();
             ApiService.getInstance().setFollow(new ToggleFollow(me.id,user.id,follow,user.objectId),new FollowToggleCallback(me,user,follow));
         }else if(connection != null && !follow){
-            user.followingsCount -= 1;
+            if(user.followingsCount > 0){
+                user.followingsCount -= 1;
+            }
             user.save();
             connection = QueryBuilder.connection(me,user).get();
             String objectId = connection.objectId;
@@ -143,7 +145,9 @@ public class FollowToggleService extends Service{
     private void fail(User me,User toggleUser,boolean follow,boolean notAuth,String objectId){
             if(follow){
                 new Connection(me.id,toggleUser.id).delete();
-                me.followingsCount -= 1;
+                if(me.followingsCount > 0){
+                    me.followingsCount -= 1;
+                }
                 me.save();
             }else {
                 new Connection(me.id,toggleUser.id,objectId).save();

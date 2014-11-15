@@ -42,7 +42,8 @@ public class PostsSyncService extends IntentService{
         }
         try {
             User me = QueryBuilder.me().get();
-            ParseBase<List<Post>> result = ApiService.getInstance().getPosts(me.id);
+            User user = intent.getParcelableExtra("user");
+            ParseBase<List<Post>> result = ApiService.getInstance().getPosts(user.id);
             Transaction transaction  = new Transaction();
             Iterator<Post> iterator = result.results.iterator();
             while (iterator.hasNext()){

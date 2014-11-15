@@ -43,6 +43,11 @@ public class TextPostFragment extends PostFragment{
         if(showAuthor){
             Picasso.with(getActivity()).load(author.avatar).noFade().into(this.avatar);
         }
+        if(post.authorId == me.id){
+            overflow.setVisibility(View.VISIBLE);
+        }else{
+            overflow.setVisibility(View.GONE);
+        }
         return view;
     }
 

@@ -3,12 +3,16 @@ package xiaofan.yiapp.fragment;
 import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -19,9 +23,12 @@ import xiaofan.yiapp.api.entity.HeartToggle;
 import xiaofan.yiapp.base.BaseFragment;
 import xiaofan.yiapp.events.EventBus;
 import xiaofan.yiapp.events.UserClickEvent;
+import xiaofan.yiapp.service.DeletePostService;
 import xiaofan.yiapp.service.HeartToggleService;
 import xiaofan.yiapp.ui.PostCommentsActivity;
+import xiaofan.yiapp.utils.MultiChoicePopup;
 import xiaofan.yiapp.utils.QueryBuilder;
+import xiaofan.yiapp.utils.Utils;
 import xiaofan.yiapp.view.AvatarCircleView;
 
 /**
@@ -151,5 +158,50 @@ public abstract class PostFragment extends BaseFragment{
     @OnClick(R.id.overflow)
     public void onOverflowClicked(View view)
     {
+        MultiChoicePopup multiChoicePopup = new MultiChoicePopup(getActivity(), new MultiChoicePopup.OnItemSelectedListener()
+        {
+            public void onItemSelected(int position)
+            {
+                new PostFragment.DeleteStatusMonitor(getActivity()).run();
+                getActivity().startService(DeletePostService.newIntent(getActivity(), post));
+            }
+        });
+        multiChoicePopup.addChoice(getString(R.string._delete_post));
+        multiChoicePopup.show(view);
+    }
+
+    private class DeleteStatusMonitor
+    {
+        private Context context;
+        private ProgressDialog pd;
+
+        private DeleteStatusMonitor(Context context)
+        {
+            this.context = context;
+            this.pd = new ProgressDialog(context);
+            this.pd.setMessage(context.getString(R.string._delete_tip_));
+            this.pd.setCancelable(false);
+        }
+
+        @Subscribe
+        public void postDeleteFail(DeletePostService.FailureEvent failure)
+        {
+            Utils.showErrorDialog(this.context, context.getString(R.string._delete_post_failure_tip));
+            pd.dismiss();
+            EventBus.unregister(this);
+        }
+
+        @Subscribe
+        public void postDeleteSuccess(DeletePostService.SuccessEvent success)
+        {
+            pd.dismiss();
+            EventBus.unregister(this);
+        }
+
+        public void run()
+        {
+            EventBus.register(this);
+            pd.show();
+        }
     }
 }

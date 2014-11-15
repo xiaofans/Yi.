@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -31,6 +32,7 @@ import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.Connection;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.User;
+import xiaofan.yiapp.api.entity.Timeline;
 import xiaofan.yiapp.base.AuthenticatedActivity;
 import xiaofan.yiapp.events.UserClickEvent;
 import xiaofan.yiapp.fragment.DrawerFragment;
@@ -57,10 +59,13 @@ public class TimelineActivity extends AuthenticatedActivity{
     private User me;
     private int pagerPosition;
 
+    private static final String TAG = TimelineActivity.class.getSimpleName();
+
     private ManyQuery.ResultHandler<Post> onTimelineLoaded = new ManyQuery.ResultHandler<Post>()
     {
         public boolean handleResult(CursorList<Post> cursorList)
         {
+            Log.w(TAG,"-- onTimelineLoaded --");
             if (!isFinishing())
             {
                 pagerAdapter.setPosts(cursorList.asList());
@@ -137,6 +142,7 @@ public class TimelineActivity extends AuthenticatedActivity{
         pager.setPageMargin((int) (2.0F * getResources().getDisplayMetrics().density));
         this.pagerAdapter = new PostsFragmentAdapter(getSupportFragmentManager());
         this.pager.setAdapter(this.pagerAdapter);
+
         pager.setOnPageChangeListener(pageScrollListener);
         me = QueryBuilder.me().get();
         QueryBuilder.timeline(me).getAsync(getLoaderManager(), this.onTimelineLoaded, Connection.class);
