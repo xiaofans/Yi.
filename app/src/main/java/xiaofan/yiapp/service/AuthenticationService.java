@@ -64,7 +64,7 @@ public class AuthenticationService extends Service{
         socialApi.getSocialAuth(this,new LoginCallback() {
             @Override
             public void failure(LoginError loginError) {
-                Toast.makeText(getApplicationContext(),"auth failure!" + loginError.error,Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getApplicationContext(),"auth failure!" + loginError.error,Toast.LENGTH_LONG).show();
                 EventBus.post(new FailureEvent());
                 if(!loginError.networkError){
                     EventBus.post(new LogoutEvent());
@@ -74,7 +74,7 @@ public class AuthenticationService extends Service{
 
             @Override
             public void success(SocialAuth socialAuth) {
-                Toast.makeText(getApplicationContext(),"auth success!",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"auth success!",Toast.LENGTH_LONG).show();
                 Gson gson = new Gson();
                 try {
                     ApiService.getInstance().login(new JSONObject(gson.toJson(socialAuth)),new AuthenticationCallback());

@@ -26,6 +26,7 @@ import xiaofan.yiapp.api.ApiService;
 import xiaofan.yiapp.api.Post;
 import xiaofan.yiapp.api.PostTemplate;
 import xiaofan.yiapp.api.UploadService;
+import xiaofan.yiapp.api.User;
 import xiaofan.yiapp.api.entity.UploadFile;
 import xiaofan.yiapp.base.CreateInfo;
 import xiaofan.yiapp.events.EventBus;
@@ -34,6 +35,7 @@ import xiaofan.yiapp.social.LoginCallback;
 import xiaofan.yiapp.social.LoginError;
 import xiaofan.yiapp.social.SocialApi;
 import xiaofan.yiapp.social.SocialAuth;
+import xiaofan.yiapp.utils.QueryBuilder;
 import xiaofan.yiapp.utils.Utils;
 
 /**
@@ -200,7 +202,8 @@ public class UploadPostService extends Service{
         @Override
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
-            uploadPost(authInfo.id,postTemplate.type,postTemplate.text,postTemplate.color,file);
+            User me = QueryBuilder.me().get();
+            uploadPost(me.id+"",postTemplate.type,postTemplate.text,postTemplate.color,file);
         }
     }
 

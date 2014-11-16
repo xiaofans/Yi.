@@ -50,12 +50,13 @@ public class LoginActivity extends BaseActivity{
                 SocialApi.getCurrent(LoginActivity.this).login(LoginActivity.this,new LoginCallback() {
                     @Override
                     public void failure(LoginError loginError) {
-                        Toast.makeText(LoginActivity.this,"WeiBo login failure! " + loginError.error,Toast.LENGTH_LONG).show();
+                       // Toast.makeText(LoginActivity.this,"WeiBo login failure! " + loginError.error,Toast.LENGTH_LONG).show();
+                        Utils.showErrorDialog(LoginActivity.this,getString(R.string._login_fail_tip));
                     }
 
                     @Override
                     public void success(SocialAuth socialAuth) {
-                        Toast.makeText(LoginActivity.this,"WeiBo login success!" + socialAuth.toString(),Toast.LENGTH_LONG).show();
+                       // Toast.makeText(LoginActivity.this,"WeiBo login success!" + socialAuth.toString(),Toast.LENGTH_LONG).show();
                         pd.show();
                         startService(AuthenticationService.newIntent(LoginActivity.this));
                     }
@@ -138,7 +139,7 @@ public class LoginActivity extends BaseActivity{
     @Subscribe
     public void authenticationFailure(AuthenticationService.FailureEvent failureEvent){
         pd.dismiss();
-        Toast.makeText(LoginActivity.this,"登录失败，请重试!",Toast.LENGTH_LONG).show();
+        Utils.showErrorDialog(LoginActivity.this,getString(R.string._login_fail_tip));
     }
 
     @Override
