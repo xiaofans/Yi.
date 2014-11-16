@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import xiaofan.yiapp.R;
@@ -37,8 +39,12 @@ public class QQApi extends SocialApi{
     private static final String PREF_OAUTH_NETWORK = "qq_oauth_network";
     private static final String PREF_OAUTH_ID = "qq_oauth_id";
 
+    private static final String PREF_OAUTH_NAME = "qq_oauth_name";
+    private static final String PREF_OAUTH_AVATAR = "qq_oauth_avatar";
+
     private Activity activity;
     private LoginCallback loginCallback;
+    private UserInfo mInfo;
 
     class LoginListener extends BaseUiListener{
         private LoginCallback loginCallback;
@@ -62,8 +68,9 @@ public class QQApi extends SocialApi{
                 socialAuth.id = openId;
                 socialAuth.token = token;
                 socialAuth.network = TAG;
-                saveQQToken(socialAuth);
-                loginCallback.success(socialAuth);
+
+               // loginCallback.success(socialAuth);
+                updateUserInfo(socialAuth,loginCallback);
             } catch(Exception e) {
                 loginCallback.failure(new LoginError(e.toString(),false));
             }
@@ -75,6 +82,50 @@ public class QQApi extends SocialApi{
         }
     }
 
+    private void updateUserInfo(final SocialAuth socialAuth, final LoginCallback loginCallback) {
+        if (mTencent != null && mTencent.isSessionValid()) {
+            IUiListener listener = new IUiListener() {
+
+                @Override
+                public void onError(UiError e) {
+                    loginCallback.failure(new LoginError(e.toString(),false));
+                }
+
+                @Override
+                public void onComplete(final Object response) {
+                    if(response != null){
+                        JSONObject jsonObject = (JSONObject) response;
+                        try {
+                            if (jsonObject.has("nickname")) {
+                                    socialAuth.name = jsonObject.getString("nickname");
+                            }
+                            if(jsonObject.has("figureurl")){
+                                socialAuth.avatar = jsonObject.getString("figureurl_qq_2");
+                            }
+                            saveQQToken(socialAuth);
+                            loginCallback.success(socialAuth);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            loginCallback.failure(new LoginError("null json",false));
+                        }
+                    }else{
+                        loginCallback.failure(new LoginError("null json",false));
+                    }
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            };
+            mInfo = new UserInfo(activity, mTencent.getQQToken());
+            mInfo.getUserInfo(listener);
+        } else {
+
+        }
+    }
+
+
 
     private void saveQQToken(SocialAuth socialAuth) {
         if(socialAuth == null) return;
@@ -82,6 +133,8 @@ public class QQApi extends SocialApi{
         editor.putString(PREF_OAUTH_TOKEN, socialAuth.getToken());
         editor.putString(PREF_OAUTH_ID,socialAuth.getId());
         editor.putString(PREF_OAUTH_NETWORK,TAG);
+        editor.putString(PREF_OAUTH_NAME,socialAuth.name);
+        editor.putString(PREF_OAUTH_AVATAR,socialAuth.avatar);
         editor.apply();
     }
 
@@ -91,10 +144,14 @@ public class QQApi extends SocialApi{
         if(TextUtils.isEmpty(id)) return null;
         String token = sharedPreferences.getString(PREF_OAUTH_TOKEN,null);
         String network = sharedPreferences.getString(PREF_OAUTH_NETWORK,null);
+        String name = sharedPreferences.getString(PREF_OAUTH_NAME,null);
+        String avatar = sharedPreferences.getString(PREF_OAUTH_AVATAR,null);
         SocialAuth socialAuth = new SocialAuth();
         socialAuth.id = id;
         socialAuth.network = network;
         socialAuth.token = token;
+        socialAuth.name = name;
+        socialAuth.avatar = avatar;
         return socialAuth;
     }
 

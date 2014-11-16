@@ -8,6 +8,8 @@ public class SocialAuth {
     public String network;
     public String token;
 
+    public String name;
+    public String avatar;
     public SocialAuth(){}
 
     public SocialAuth(String id, String network, String token) {

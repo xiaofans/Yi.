@@ -7,53 +7,83 @@ Parse.Cloud.define("hello", function(request, response) {
 
 Parse.Cloud.define("signup", function(request, response) {
   var p = request.params.nameValuePairs;
+  if(p.name == null || p.name == 'undefined'){
    Parse.Cloud.httpRequest({
-      url:'https://api.weibo.com/2/users/show.json',
-      params: {
-      access_token:p.token,
-      uid:p.id,
-      source:"2718899853"
-      },
-      success: function(httpResponse) {
-        console.log(httpResponse.text);
-        var resultJson = JSON.parse(httpResponse.text);
-        var query = new Parse.Query("Users");
-        query.equalTo("uid", resultJson.id);
-        query.find({
-            success:function(results){
-                var result = {};
-                result.id = resultJson.id;
-                result.avatar = resultJson.avatar_large;
-                result.name = resultJson.name;
-                if(results.length > 0){
-                 result.objectId = results[0].id;
-                 result.isRegisterOnServer = true;
-                 result.followersCount = results[0].get("followersCount");
-                 result.followingsCount = results[0].get("followingsCount");
-                }else{
-                    result.objectId = "";
+          url:'https://api.weibo.com/2/users/show.json',
+          params: {
+          access_token:p.token,
+          uid:p.id,
+          source:"2718899853"
+          },
+          success: function(httpResponse) {
+            console.log(httpResponse.text);
+            var resultJson = JSON.parse(httpResponse.text);
+            var query = new Parse.Query("Users");
+            query.equalTo("uid", resultJson.id);
+            query.find({
+                success:function(results){
+                    var result = {};
+                    result.id = resultJson.id;
+                    result.avatar = resultJson.avatar_large;
+                    result.name = resultJson.name;
+                    if(results.length > 0){
+                     result.objectId = results[0].id;
+                     result.isRegisterOnServer = true;
+                     result.followersCount = results[0].get("followersCount");
+                     result.followingsCount = results[0].get("followingsCount");
+                    }else{
+                        result.objectId = "";
+                        result.isRegisterOnServer = false;
+                    }
+                    response.success(result);
+                },
+                error:function(){
+                    var result = {};
+                    result.id = resultJson.id;
                     result.isRegisterOnServer = false;
+                    result.avatar = resultJson.avatar_large;
+                    result.name = resultJson.name;
+                    response.success(result);
                 }
-                response.success(result);
-            },
-            error:function(){
-                var result = {};
-                result.id = resultJson.id;
-                result.isRegisterOnServer = false;
-                result.avatar = resultJson.avatar_large;
-                result.name = resultJson.name;
-                response.success(result);
-            }
+            });
+
+
+          },
+          error: function(httpResponse) {
+            console.error('Request failed with response code ' + httpResponse.status);
+            response.success("MY ERROR! token is;" + p.token +" "+httpResponse.text);
+          }
         });
-
-
-      },
-      error: function(httpResponse) {
-        console.error('Request failed with response code ' + httpResponse.status);
-        response.success("MY ERROR! token is;" + p.token +" "+httpResponse.text);
-      }
-    });
-
+  }else{
+   var query = new Parse.Query("Users");
+          query.equalTo("uid", p.id.hashCode());
+          query.find({
+              success:function(results){
+                  var result = {};
+                  result.id = p.id.hashCode();
+                  result.avatar = p.avatar;
+                  result.name = p.name;
+                  if(results.length > 0){
+                   result.objectId = results[0].id;
+                   result.isRegisterOnServer = true;
+                   result.followersCount = results[0].get("followersCount");
+                   result.followingsCount = results[0].get("followingsCount");
+                  }else{
+                      result.objectId = "";
+                      result.isRegisterOnServer = false;
+                  }
+                  response.success(result);
+              },
+              error:function(){
+                  var result = {};
+                  result.id = resultJson.id;
+                  result.isRegisterOnServer = false;
+                  result.avatar = resultJson.avatar_large;
+                  result.name = resultJson.name;
+                  response.success(result);
+              }
+          });
+  }
 });
 
 // 获取post
