@@ -89,9 +89,8 @@
     <orderEntry type="library" exported="" name="retrofit-1.7.0" level="project" />
     <orderEntry type="library" exported="" name="Parse-1.7.1" level="project" />
     <orderEntry type="library" exported="" name="weibosdkcore" level="project" />
-    <orderEntry type="library" exported="" name="open_sdk_r4346" level="project" />
-    <orderEntry type="library" exported="" name="square-otto-1.3.2" level="project" />
     <orderEntry type="library" exported="" name="calligraphy-1.1.0" level="project" />
+    <orderEntry type="library" exported="" name="square-otto-1.3.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="library-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="eventbus-2.2.1" level="project" />
