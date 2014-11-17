@@ -22,10 +22,8 @@ public abstract class SocialApi {
         ALL.put(WeiboApi.TAG,new WeiboApi());
         ALL.put(QQApi.TAG,new QQApi());
     }
-    public static SocialApi getCurrent(Context context){
-        if(currentAuth == null){
-            currentAuth = ALL.get(ApplicationPreferences.get(context).getAuthenticatedNetwork());
-        }
+    public synchronized static SocialApi getCurrent(Context context){
+        currentAuth = ALL.get(ApplicationPreferences.get(context).getAuthenticatedNetwork());
         return currentAuth;
     }
 

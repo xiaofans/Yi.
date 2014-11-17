@@ -18,11 +18,11 @@ public class ApplicationPreferences {
         return new ApplicationPreferences(context.getSharedPreferences("yiapp",0));
     }
 
-    public String getAuthenticatedNetwork(){
+    public synchronized String getAuthenticatedNetwork(){
         return prefs.getString(PREF_AUTHENTICATED_NETWORK,null);
     }
 
-    public void setAuthenticatedNetwork(String authenticatedNetwork){
+    public synchronized  void setAuthenticatedNetwork(String authenticatedNetwork){
         prefs.edit().putString(PREF_AUTHENTICATED_NETWORK,authenticatedNetwork).commit();
     }
 

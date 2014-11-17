@@ -39,6 +39,9 @@ public class TimelineSyncService extends IntentService{
         }
         try {
             User me = QueryBuilder.me().get();
+            if(me == null){
+                stopSelf();
+            }
             ParseBase<ArrayList<Post>> result = ApiService.getInstance().getTimeline(new Timeline(me.id,me.id));
             ArrayList<Post> posts = result.result == null ? new ArrayList<Post>() : result.result;
             Iterator<Post> iterator = posts.iterator();

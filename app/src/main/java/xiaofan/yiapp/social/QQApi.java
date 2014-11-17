@@ -178,8 +178,8 @@ public class QQApi extends SocialApi{
         this.loginCallback = loginCallback;
         if (mTencent == null) {
             mTencent = Tencent.createInstance(mAppid, activity);
-            mTencent.login(activity, "all", new LoginListener(loginCallback));
         }
+        mTencent.login(activity, "all", new LoginListener(loginCallback));
     }
 
     @Override
