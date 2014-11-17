@@ -134,6 +134,7 @@ public class LoginActivity extends BaseActivity{
     public void authenticationSuccess(AuthenticationService.SuccessEvent successEvent){
         pd.dismiss();
         startActivity(TimelineActivity.newIntent(LoginActivity.this));
+        finish();
     }
 
     @Subscribe
