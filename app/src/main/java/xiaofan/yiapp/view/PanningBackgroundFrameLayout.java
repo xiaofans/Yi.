@@ -173,7 +173,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
         backgroundWidth = (int)(f * backgroundWidth);
         backgroundHeight = (int)(f * backgroundHeight);
         // step 2. calculate background scale offset can pan.
-        if(backgroundWidth > getWidth()){
+        if(backgroundWidth >= getWidth()){
             minBackgroundScale = (double)getMeasuredWidth() / (double)backgroundWidth;
             minBackgroundOffset = getMeasuredWidth() - backgroundWidth;
             if(minBackgroundScale >= 0.9d){

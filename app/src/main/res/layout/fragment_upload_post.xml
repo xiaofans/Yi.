@@ -3,7 +3,8 @@
     android:id="@+id/post_background"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <RelativeLayout
         android:padding="24.0dip"
         android:clipChildren="false"
@@ -25,6 +26,7 @@
             android:layout_alignParentTop="true"
             />
         <LinearLayout
+            android:id="@+id/author_info_ll"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
@@ -46,27 +48,29 @@
                 android:src="@drawable/ic_upload"
             />
         </LinearLayout>
-        <EditText
-            android:textSize="24.0sp"
-            android:textColor="@android:color/white"
-            android:textColorHint="#aaffffff"
-            android:gravity="top"
-            android:id="@+id/text"
-            android:background="@null"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginTop="26.0dip"
-            android:hint="@string/new_post_text_hint"
-            android:maxLines="5"
-            android:shadowColor="@color/text_shadow"
-            android:shadowDx="0.0"
-            android:shadowDy="2.0"
-            android:shadowRadius="2.0"
-            android:layout_below="@id/app_name"
-            android:inputType="textCapSentences|textMultiLine"
-            android:textCursorDrawable="@null"
-            />
+            <EditText
+                android:textSize="24.0sp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#aaffffff"
+                android:gravity="top"
+                android:id="@+id/text"
+                android:background="@null"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:hint="@string/new_post_text_hint"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="0.0"
+                android:shadowDy="2.0"
+                android:shadowRadius="2.0"
+                android:inputType="textCapSentences|textMultiLine"
+                android:textCursorDrawable="@null"
+                android:maxLines="10"
+                android:layout_below="@id/author_info_ll"
+                android:layout_above="@id/popup_window_ll"
+                android:layout_marginTop="12dp"
+                />
         <LinearLayout
+            android:id="@id/popup_window_ll"
             android:orientation="horizontal"
             android:background="@drawable/popup_window"
             android:clickable="true"

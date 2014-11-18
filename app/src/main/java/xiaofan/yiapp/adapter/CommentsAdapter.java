@@ -99,7 +99,7 @@ public class CommentsAdapter extends RecycleAdapter{
     }
 
     public String parseDay(Date date){
-        if(date == null) return "";
+        if(date == null) return "刚刚";
         String dateStr = new SimpleDateFormat("yyyy-MM-dd'T'hh:ss:mm.SSS'Z'").format(date);
         if(TextUtils.isEmpty(dateStr)){
             return "";
