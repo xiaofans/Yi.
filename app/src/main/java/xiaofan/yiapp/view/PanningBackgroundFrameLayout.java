@@ -168,7 +168,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
         this.backgroundWidth =  background.getBitmap().getWidth();
         float f = (float)getMeasuredHeight() / (float)backgroundHeight;
         if(f * backgroundWidth < getMeasuredWidth()){
-            f = getMeasuredWidth() / backgroundWidth;
+            f = (float)getMeasuredWidth() / (float)backgroundWidth;
         }
         backgroundWidth = (int)(f * backgroundWidth);
         backgroundHeight = (int)(f * backgroundHeight);
