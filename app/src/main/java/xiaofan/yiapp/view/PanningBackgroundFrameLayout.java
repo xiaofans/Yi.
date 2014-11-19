@@ -86,7 +86,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
    private double minBackgroundScale;
    private double panPerSecond = 10F * getResources().getDisplayMetrics().density;
    private long lastPan;
-   private boolean isZoomedOut = true;
+   private boolean isZoomedOut = false;
    private boolean shouldAnimateBackgroundChange = true;
     private boolean isClickToZoomEnabled;
 
@@ -124,7 +124,7 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
 
         @Override
         public void onSpringAtRest(Spring spring) {
-            if(!isZoomedOut){
+            if(isZoomedOut){
                 setPanningEnabled(false);
             }else {
                 setPanningEnabled(true);
@@ -286,12 +286,12 @@ public class PanningBackgroundFrameLayout extends FrameLayout implements View.On
     public void toggleZoomedOut(){
         if(!canPan) return;
         if(isZoomedOut){
-            scaleSpring.setVelocity(-10.0D);
-            scaleSpring.setEndValue(this.minBackgroundScale);
+            scaleSpring.setVelocity(10.0D);
+            scaleSpring.setEndValue(1.0D);
             isZoomedOut = false;
         }else{
-            this.scaleSpring.setVelocity(10.0D);
-            this.scaleSpring.setEndValue(1.0D);
+            scaleSpring.setVelocity(-10.0D);
+            scaleSpring.setEndValue(this.minBackgroundScale);
             isZoomedOut = true;
         }
 

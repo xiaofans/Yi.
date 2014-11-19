@@ -55,7 +55,6 @@ public class ImagePostFragment extends PostFragment{
 
     @Override
     public boolean onBackPressed() {
-        Log.w(TAG,"--- onBackPressed invoked ---");
         if (postView.isZoomedOut())
         {
             postView.toggleZoomedOut();
