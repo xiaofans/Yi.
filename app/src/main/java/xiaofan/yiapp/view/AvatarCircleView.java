@@ -48,6 +48,7 @@ public class AvatarCircleView extends View implements Target{
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if(this.avater != null){
             this.roundAvatar = makeRoundAndFit(avater);
+            setAvatar(avater);
         }
     }
 

@@ -50,7 +50,7 @@ public class LoginActivity extends BaseActivity{
                 SocialApi.getCurrent(LoginActivity.this).login(LoginActivity.this,new LoginCallback() {
                     @Override
                     public void failure(LoginError loginError) {
-                       // Toast.makeText(LoginActivity.this,"WeiBo login failure! " + loginError.error,Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this,"WeiBo login failure! " + loginError.error,Toast.LENGTH_LONG).show();
                         Utils.showErrorDialog(LoginActivity.this,getString(R.string._login_fail_tip));
                     }
 
